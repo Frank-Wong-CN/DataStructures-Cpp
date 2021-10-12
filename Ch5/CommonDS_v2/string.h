@@ -10,12 +10,12 @@
 #endif
 
 #ifndef _NODE_IMPL_
-#include "..\Ch3\CommonDS_v2\node_impl_basic.h"
+#include "../Ch3/CommonDS_v2/node_impl_basic.h"
 #endif
 
-#include "..\Ch3\CommonDS_v2\list.h"
-#include "..\Ch3\CommonDS_v2\stack.h"
-#include "..\Ch3\CommonDS_v2\queue.h"
+#include "../Ch3/CommonDS_v2/list.h"
+#include "../Ch3/CommonDS_v2/stack.h"
+#include "../Ch3/CommonDS_v2/queue.h"
 
 #ifndef StringPartSize
 #define StringPartSize 31 // Should be smaller than uint_max

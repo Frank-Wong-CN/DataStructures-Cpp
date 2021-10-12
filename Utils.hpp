@@ -1,6 +1,7 @@
 #pragma once
 
 #include <ctime>
+#include <climits>
 #include <chrono>
 #include <iostream>
 #include <iomanip>
@@ -216,7 +217,11 @@ namespace RdGen
 	static std::random_device __rd;
 	static std::mt19937 __rdEngine(__rd());
 	
+	#if __cplusplus > 201907L
 	template <typename T> requires std::is_arithmetic_v<T>
+	#else
+	template <typename T>
+	#endif
 	T Random(T min, T max)
 	{
 		if (std::is_integral_v<T>)
@@ -231,7 +236,11 @@ namespace RdGen
 		}
 	}
 	
+	#if __cplusplus > 201907L
 	template <typename T> requires std::is_arithmetic_v<T>
+	#else
+	template <typename T>
+	#endif
 	T *ArrGen(size_t size, T min, T max)
 	{
 		T *arr = (T *)malloc(sizeof(T) * size);
