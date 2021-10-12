@@ -1,0 +1,16 @@
+.L Load
+AllowRedefine
+
+String b = CreateStringFromCharArray("Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!") // Length 62
+InsertString(b, 15, b) // Split at 'N' of 'Name'
+// Hello World My Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!
+// Hello World My Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!
+InsertString(b, 25, b)
+// Hello World My Hello World My Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!
+// Hello World My Hello WorlHello World My Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!d My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!
+GetCharArray(b)
+InsertString(b, 36, b)
+// Current Bug:
+// Hello World My Hello World My HelloHello World My Hello World My Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!! World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!
+// Hello World My Hello World My Hello World My Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Hello World My Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!
+GetCharArray(b)

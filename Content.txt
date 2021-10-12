@@ -1,0 +1,62 @@
+Chapter 2 Intro to Algorithms and Big-O notation
+	O(n) = Upper Bound of a function, if f(n) = O(g(n)), then limit of f(n) / g(n) as n goes to infinity is 0
+		Big-O notation: g(n) grows faster than f(n)
+	o(n) = Lower Bound of a function, if f(n) = o(g(n)), then limit of f(n) / g(n) as n goes to infinity is infinity
+		Little-O notation: f(n) grows faster than g(n)
+	Θ(n) = Approximation of a function, if f(n) = Θ(g(n)), then limit of f(n) / g(n) as n goes to infinity equals to a constant number
+		Big-Theta notation: f(n) grows as fast as g(n)
+	As to how to calculate time complexity
+		Each line of basic instruction counts as 1, regardless of disk IO time or OS related time
+		A N-loop that contains k lines of basic instructions has a time complexity of kN
+		A M-loop nested in a N-loop with k lines of basic instructions has a time complexity of kMN
+		When calculating Big-O:
+			Add all time together
+			Keep ONLY the highest order of the polynomial, discard the rest
+			Discard the constant factor
+		For example, O(3N^2 + 9N + 91020) = O(N^2), O(100000000) = O(1)
+
+Chapter 3 Linked List, Stack, Queue
+	Linked List ADT
+		struct Node { Element X, Node *Next }
+		Interface: Insert, Delete, Length, Find
+	Stack ADT
+		FILO, Interface: Push, Pop, Peek (Top)
+	Queue ADT
+		FIFO, Interface: Enqueue, Dequeue, Peek (Front)
+
+Chapter 4 Tree
+	N-ary Tree (General Tree) ADT
+		struct Node { Element X, Node *Child, Node *Sibling } *Child-Sibling Representation
+		struct Node { Element X, Node *Children[] } *Children Representation
+		Interface: AddChild, AddSibling, Remove, Traverse (PreOrder, PostOrder)
+	Binary Tree ADT
+		Interface: AddLeftChild, AddRightChild, Remove, Traverse (PreOrder, InOrder, PostOrder), ConvertToForest (ForestToBinary, BinaryToForest)
+	Binary Search Tree ADT
+		Interface: Add, Remove, Find, Traverse (PreOrder, InOrder, PostOrder)
+	AVL Tree ADT
+		Interface: Add, Remove, Find, Traverse (PreOrder, InOrder, PostOrder)
+		Utility: LeftRotate, RightRotate (Or LL-Rotate, LR-Rotate, RR-Rotate, RL-Rotate)
+	B-Tree ADT
+		Interface: Add, Remove, Find, Traverse (InOrder)
+		Utility: Split
+	B+Tree ADT
+		Interface: Add, Remove, Find, Traverse (InOrder)
+		Utility: Split
+	Red Black Tree ADT
+	Splay Tree ADT
+
+Chapter 5 String (Originally Hashing, but my book does not cover this topic)
+	Sequence String
+	Linked String
+	Combined String
+	KMP Algorithm
+
+Chapter 6 Multi-dimensional Array (Originally Heap and Priority Queue, same as above)
+
+Chapter 7 Graph
+
+Chapter 8 Sorting Algorithms
+
+Chapter 9 Indexing Algorithms
+
+Chapter 10 Advanced Structures and Designing Algorithms
