@@ -29,6 +29,12 @@
 #define ShowTime(X) return X;
 #endif
 
+#if __cplusplus > 201907L
+#define RequireArthimetic(T) requires std::is_arithmetic_v<T>
+#else
+#define RequireArthimetic(T)
+#endif
+
 inline int Min(int a, int b)
 {
 	return (a < b ? a : b);
@@ -217,11 +223,7 @@ namespace RdGen
 	static std::random_device __rd;
 	static std::mt19937 __rdEngine(__rd());
 	
-	#if __cplusplus > 201907L
-	template <typename T> requires std::is_arithmetic_v<T>
-	#else
-	template <typename T>
-	#endif
+	template <typename T> RequireArthimetic(T)
 	T Random(T min, T max)
 	{
 		if (std::is_integral_v<T>)
@@ -236,11 +238,7 @@ namespace RdGen
 		}
 	}
 	
-	#if __cplusplus > 201907L
-	template <typename T> requires std::is_arithmetic_v<T>
-	#else
-	template <typename T>
-	#endif
+	template <typename T> RequireArthimetic(T)
 	T *ArrGen(size_t size, T min, T max)
 	{
 		T *arr = (T *)malloc(sizeof(T) * size);
