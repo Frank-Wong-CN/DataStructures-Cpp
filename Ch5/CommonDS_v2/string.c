@@ -149,6 +149,7 @@ List __CharArrayBuildKMPNextTable(const CharType *Str)
 	
 	while (Pos < Len)
 	{
+		fmt::print("{} / {}\n", Pos, Len);
 		if (Str[Pos] == Str[Cnd])
 			At(T, Pos)->Element = At(T, Cnd)->Element;
 		else
