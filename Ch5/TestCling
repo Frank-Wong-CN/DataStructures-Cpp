@@ -1,16 +1,32 @@
 .L Load
 AllowRedefine
 
-String b = CreateStringFromCharArray("Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!") // Length 62
-InsertString(b, 15, b) // Split at 'N' of 'Name'
-// Hello World My Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!
-// Hello World My Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!
-InsertString(b, 25, b)
-// Hello World My Hello World My Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!
-// Hello World My Hello WorlHello World My Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!d My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!
-GetCharArray(b)
-InsertString(b, 36, b)
-// Current Bug:
-// Hello World My Hello World My HelloHello World My Hello World My Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!! World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!
-// Hello World My Hello World My Hello World My Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Hello World My Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Hello World My Name Is Frank And Nice To Meet You!!!!!!!!!!!!!Name Is Frank And Nice To Meet You!!!!!!!!!!!!!
-GetCharArray(b)
+String a = CreateStringFromCharArray("Lorem ipsum dolor sit amet, consectetur adipiscing elit. An eum discere ea mavis, quae cum plane perdidiceriti nihil sciat? Princeps huius civitatis Phalereus Demetrius cum patria pulsus esset iniuria, ad Ptolomaeum se regem Alexandream contulit. Nunc dicam de voluptate, nihil scilicet novi, ea tamen, quae te ipsum probaturum esse confidam. Saepe ab Aristotele, a Theophrasto mirabiliter est laudata per se ipsa rerum scientia; Nos autem non solum beatae vitae istam esse oblectationem videmus, sed etiam levamentum miseriarum. Quodsi ipsam honestatem undique pertectam atque absolutam. Ut pulsi recurrant? Cuius ad naturam apta ratio vera illa et summa lex a philosophis dicitur. Duo Reges: constructio interrete. Tum ille: Ain tandem? Nam illud quidem adduci vix possum, ut ea, quae senserit ille, tibi non vera videantur. Quodsi, ne quo incommodo afficiare, non relinques amicum, tamen, ne sine fructu alligatus sis, ut moriatur optabis.")
+BruteForcePatternMatchWithCharArray(a, "K")
+BruteForcePatternMatchWithCharArray(a, "123")
+BruteForcePatternMatchWithCharArray(a, "")
+BruteForcePatternMatchWithCharArray(a, "H")
+__StrData(BruteForcePatternMatchWithCharArray(a, "Q"))->Data
+__StrData(BruteForcePatternMatchWithCharArray(a, "e"))->Data
+
+unsigned int offset = 0;
+String b = __StrWhichPartHasIndex(a, 1, NULL, &offset)
+
+offset
+__StrPrintPart(a)
+__StrData(b)->Data[offset]
+
+__StrData(BruteForcePatternMatchWithCharArray(a, "e"))->Head
+__StrData(BruteForcePatternMatchWithCharArray(a, "l"))->Head
+Size(a)
+__StrPrintPart(a)
+__StrData(BruteForcePatternMatchWithCharArray(a, "l"))->Data
+Size(a)
+__StrPrintPart(a)
+__StrData(BruteForcePatternMatchWithCharArray(a, "l"))->Data
+BruteForcePatternMatchWithCharArray(a, "l0")
+BruteForcePatternMatchWithCharArray(a, "lo")
+BruteForcePatternMatchWithCharArray(a, "lo")
+
+b = BruteForcePatternMatchWithCharArray(a, "lle")
+__StrPrint(b)

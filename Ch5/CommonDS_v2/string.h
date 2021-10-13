@@ -2,7 +2,7 @@
 #define __STRING_H_
 
 #ifndef ElementType
-#define ElementType void *
+#define ElementType unsigned long long
 #endif
 
 #ifndef Payload
@@ -45,12 +45,14 @@ void DestroyString(String *Str);
 void CopyString(String Dest, const String Src, int Size, int TerminateString);
 void ConcatString(String First, const String Second);
 void InsertString(String Main, const int Index, const String Insert);
+int CompareString(String First, String Second);
 String BruteForcePatternMatch(String Main, const String Pattern);
 String KMPPatternMatch(String Main, const String Pattern);
 
-void CopyStringWithCharArray(String Dest, const CharType *Src, int Size, int TerminateString);
-void ConcatStringWithCharArray(String First, const CharType *Second);
-void InsertStringWithCharArray(String Main, const int Index, const CharType *Insert);
+void CopyCharArray(String Dest, const CharType *Src, int Size, int TerminateString);
+void ConcatCharArray(String First, const CharType *Second);
+void InsertCharArray(String Main, const int Index, const CharType *Insert);
+int CompareCharArray(String First, const CharType *Second);
 String BruteForcePatternMatchWithCharArray(String Main, const CharType *Pattern);
 String KMPPatternMatchWithCharArray(String Main, const CharType *Pattern);
 

@@ -361,11 +361,7 @@ void Delete(ElementType X, Tree T, Child (*Yield)(Tree T), int DeleteSubTreeAsWe
 			continue;
 		
 		if (TNodeRetrieve(C) == X)
-		{
-			if (C == T)
-				//FatalError("One does not simply delete an root node!");
-				continue;
-			
+		{	
 			// P is sibling of C
 			if (IsSibling(P, C))
 				P->NextSibling = C->NextSibling;
@@ -433,7 +429,6 @@ void AppendTree(Tree Sub, Tree Dst)
 
 void DeleteTree(Tree *T, Tree P)
 {
-	unsigned long long O;
 	if (P != NULL)
 		if ((P = (Tree)GetClosestConnection(*T, P, NULL, NULL, NULL)) != NULL)
 			*((Tree *)P) = (*T)->NextSibling;

@@ -17,6 +17,7 @@ Position Header(List L);
 Position First(List L);
 Position Last(List L);
 Position Advance(Position P);
+Position At(List L, unsigned int Index);
 ElementType Retrieve(Position P);
 size_t Size(List L);
 

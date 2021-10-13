@@ -1,5 +1,11 @@
 #include "string.h"
 
+#ifdef __CLING__
+	#define __StrClingOutput(PrintfVer, FmtVer, ...) fmt::print(FmtVer, __VA_ARGS__)
+#else
+	#define __StrClingOutput(PrintfVer, FmtVer, ...) printf(PrintfVer, __VA_ARGS__)
+#endif
+
 StringData *__StrData(String Str)
 { return (StringData *)Str->Element; }
 
@@ -8,7 +14,7 @@ unsigned int __StrPartLen(String Str)
 
 void __StrTerminateStringAt(String Str, unsigned int Index)
 {
-	if (Str == NULL || Index < 0 || Index > StringPartSize)
+	if (Str == NULL || Index > StringPartSize)
 		return;
 	
 	Index += __StrData(Str)->Head;
@@ -24,71 +30,60 @@ void __StrShiftToBack(String Str)
 		return;
 	
 	unsigned int Len = __StrPartLen(Str);
+	unsigned int Start = StringPartSize - Len;
 	if (Len + __StrData(Str)->Head != StringPartSize)
 	{
-		unsigned int Start = StringPartSize - Len;
 		memcpy(__StrData(Str)->Data + Start, __StrData(Str)->Data + __StrData(Str)->Head, Len * sizeof(CharType));
 		__StrData(Str)->Head = Start;
 	}
+	
+	memset(__StrData(Str)->Data, 48, Start);
 }
 
-void __StrWhichPartHasIndex(String Str, unsigned int Index, String *Part, unsigned int *Offset)
+String __StrWhichPartHasIndex(String Str, unsigned int Index, String *Part, unsigned int *Offset)
 {
-	if (Str == NULL || Index < 1 || Part == NULL || Offset == NULL)
-		return;
+	if (Str == NULL)
+		return NULL;
 	
-	// Original implementation is based on full strings: all parts are fully used with all head pointed to 0
-	/*
-	unsigned int LinkedItemCount = Index / StringPartSize;
-	if (!(Index % StringPartSize))
-		LinkedItemCount -= 1;
+	unsigned int CurLen = 0;
+	unsigned int TotalLen = 0;
+	String CurPart;
 	
-	fmt::print("[STRING] Part No. {} has index {}, with offset {}.\n", LinkedItemCount, Index, Index % StringPartSize);
-	
-	for (; LinkedItemCount > 0; LinkedItemCount--)
-		if (Str != NULL)
-			Str = Str->Next;
-		else break;
-	
-	fmt::print("[STRING] Split occurres in part {} with offset pointed to {}.\n", __StrData(Str)->Data, __StrData(Str)->Data[Index % StringPartSize]);
-	
-	*Part = Str;
-	*Offset = Index % StringPartSize;
-	*/
-	
-	unsigned int Tmp = 0;
-	
-	for (; Str != NULL && Index > 0;)
+	for (CurPart = Str; CurPart != NULL; CurPart = CurPart->Next)
 	{
-		Tmp = __StrPartLen(Str);
-		if (Index > Tmp)
-			Str = Str->Next;
-		else
-			Tmp = __StrData(Str)->Head + Index;
-		Index -= Min(Tmp, Index);
+		CurLen = __StrPartLen(CurPart);
+		TotalLen += CurLen;
+		if (TotalLen > Index)
+		{
+			if (Offset != NULL)
+				*Offset = __StrData(CurPart)->Head + CurLen - (TotalLen - Index);
+			if (Part != NULL)
+				*Part = CurPart;
+			return CurPart;
+		}
 	}
 	
-	*Offset = Tmp;
-	*Part = Str;
-	
-	//fmt::print("[STRING] Part No. {} has index {}, with offset {}.\n", i, Index, *Offset);
-	//fmt::print("[STRING] Split occurres in part {} with offset pointed to {}.\n", __StrData(*Part)->Data, __StrData(*Part)->Data[*Offset]);
+	return NULL;
 }
 
-void __StrSplitStringIntoTwoParts(String Str, unsigned int Index)
+String __StrSplitStringIntoTwoParts(String Str, unsigned int Index)
 {
-	if (Str == NULL || Index < 0)
-		return;
+	if (Str == NULL)
+		return NULL;
 	
-	String Tmp;
+	String Tmp = NULL;
 	unsigned int Split;
 	__StrWhichPartHasIndex(Str, Index, &Tmp, &Split);
 	
 	if (Tmp == NULL)
-		return;
+		return NULL;
+	
+	#ifdef __STR_OUTPUT__
+	fmt::print("[STRING] Spliting string \"{}\" at index {}.\n", __StrData(Tmp)->Data, Index);
+	#endif
 	
 	String Copy = CreateString();
-	memcpy(Copy->Element, Tmp->Element, sizeof(StringData));
+	memcpy((void *)Copy->Element, (void *)Tmp->Element, sizeof(StringData));
 	
 	Copy->Next = Tmp->Next;
 	Tmp->Next = Copy;
@@ -97,6 +92,76 @@ void __StrSplitStringIntoTwoParts(String Str, unsigned int Index)
 	__StrData(Copy)->Head = Split;
 	
 	__StrShiftToBack(Tmp);
+	
+	return Tmp;
+}
+
+void __StrPrint(String Str)
+{
+	String Cur = Str;
+	int i = 0;
+	for (; Cur != NULL; Cur = Cur->Next, i++)
+		__StrClingOutput("%s", "{}", __StrData(Cur)->Data + __StrData(Cur)->Head);
+	__StrClingOutput("%c", " ", '\n');
+}
+
+void __StrPrintPart(String Str)
+{
+	String Cur = Str;
+	int i = 0;
+	int j = 0;
+	for (; Cur != NULL; Cur = Cur->Next, i++)
+	{
+		__StrClingOutput("Part %02d: %s#%03d#\n", "Part {:02d}: {}#{:03d}#\n", i + 1, __StrData(Cur)->Data, StringPartSize);
+		for (j = 0; j < __StrData(Cur)->Head + 9; j++)
+			__StrClingOutput("%c", "{}", ' ');
+		__StrClingOutput("^ (%d)\n", "^ ({})\n", __StrData(Cur)->Head);
+	}
+}
+
+List __ListBuilder(unsigned int Size)
+{
+	if (Size < 0)
+		return NULL;
+	
+	List L = CreateList();
+	unsigned int i = 0;
+	
+	for (; i < Size; i++)
+		Insert(0, L, L);
+	
+	return L;
+}
+
+List __CharArrayBuildKMPNextTable(const CharType *Str)
+{
+	if (Str == NULL)
+		return NULL;
+	
+	unsigned int Pos = 1, Cnd = 0;
+	unsigned int Len = CharArrayLen(Str);
+	
+	if (Len < 1)
+		return NULL;
+	
+	List T = __ListBuilder(Len);
+	T->Next->Element = -1;
+	
+	while (Pos < Len)
+	{
+		if (Str[Pos] == Str[Cnd])
+			At(T, Pos)->Element = At(T, Cnd)->Element;
+		else
+		{
+			At(T, Pos)->Element = Cnd;
+			while (Cnd >= 0 && Str[Pos] != Str[Cnd])
+				Cnd = At(T, Cnd)->Element;
+		}
+		Pos++;
+		Cnd++;
+	}
+	
+	return T;
 }
 
 String CreateString()
@@ -104,7 +169,7 @@ String CreateString()
 	String Tmp = (String)CreateList();
 	PStringData Data = (PStringData)malloc(sizeof(StringData));
 	memset(Data, 0, sizeof(StringData));
-	Tmp->Element = (void *)Data;
+	Tmp->Element = (unsigned long long)Data;
 	return Tmp;
 }
 
@@ -134,12 +199,16 @@ String CreateStringFromCharArray(const CharType *Str)
 	String Tmp = NULL;
 	unsigned int CopyLen = TargetLength - Start;
 	
-	//fmt::print("[STRING] Spliting C-string \"{}\" into {} parts. The last part has {} characters.\n", Str, LinkedItemCount, CopyLen);
+	#ifdef __STR_OUTPUT__
+	fmt::print("[STRING] Spliting C-string \"{}\" into {} parts. The last part has {} characters.\n", Str, LinkedItemCount, CopyLen);
+	#endif
 	
 	for (; LinkedItemCount > 0; LinkedItemCount--)
 	{
 		String LatestPart = CreateString();
-		//fmt::print("Copying the {}th part. String splited from {} to {}, length {}.\n", LinkedItemCount, Start, Start + CopyLen * sizeof(CharType) - 1, CopyLen * sizeof(CharType));
+		#ifdef __STR_OUTPUT__
+		fmt::print("Copying the {}th part. String splited from {} to {}, length {}.\n", LinkedItemCount, Start, Start + CopyLen * sizeof(CharType) - 1, CopyLen * sizeof(CharType));
+		#endif
 		memcpy(__StrData(LatestPart)->Data, Str + Start, CopyLen * sizeof(CharType));
 		LatestPart->Next = Tmp;
 		Tmp = LatestPart;
@@ -156,10 +225,7 @@ CharType *GetCharArray(const String Str)
 		return NULL;
 	
 	unsigned int Length = GetStringLength(Str);
-	if (Length == 0)
-		Length = 1;
-	
-	unsigned int CopyLen = Min(StringPartSize, Length);
+	unsigned int CopyLen = 0;
 	unsigned int Start = 0;
 	String P;
 	
@@ -169,10 +235,9 @@ CharType *GetCharArray(const String Str)
 	for (P = Str; P != NULL; P = P->Next)
 		if (__StrData(P)->Head < StringPartSize)
 		{
-			CopyLen -= __StrData(P)->Head;
-			memcpy(CharArray + Start, __StrData(P)->Data + __StrData(P)->Head, CopyLen);
+			CopyLen = __StrPartLen(P);
+			memcpy(CharArray + Start, __StrData(P)->Data + __StrData(P)->Head, CopyLen * sizeof(CharType));
 			Start += CopyLen;
-			CopyLen = StringPartSize;
 		}
 	
 	return CharArray;
@@ -181,7 +246,7 @@ CharType *GetCharArray(const String Str)
 unsigned int GetStringLength(const String Str)
 {
 	if (Str == NULL)
-		return -1;
+		return 0;
 	
 	unsigned int Length = 0;
 	String P;
@@ -201,7 +266,7 @@ void ClearString(String Str)
 	String P;
 	
 	for (P = Str; P != NULL; P = P->Next)
-		memset(P->Element, 0, sizeof(StringData));
+		memset((void *)P->Element, 0, sizeof(StringData));
 }
 
 void DestroyString(String *Str)
@@ -212,7 +277,7 @@ void DestroyString(String *Str)
 	String P;
 	
 	for (P = *Str; P != NULL; P = P->Next)
-		free(P->Element);
+		free((void *)P->Element);
 	
 	DeleteList((List *)Str);
 }
@@ -255,7 +320,9 @@ void ConcatString(String First, const String Second)
 	if (First == NULL || Second == NULL)
 		return;
 	
-	String FirstCur = First, SecondCur = Second;
+	String SecondClone = CloneString(Second);
+	
+	String FirstCur = First, SecondCur = SecondClone;
 	while (FirstCur->Next != NULL)
 		FirstCur = FirstCur->Next;
 	
@@ -266,10 +333,12 @@ void ConcatString(String First, const String Second)
 		FirstCur->Next = CreateString();
 		FirstCur = FirstCur->Next;
 		
-		memcpy(FirstCur->Element, SecondCur->Element, sizeof(StringData));
+		memcpy((void *)FirstCur->Element, (void *)SecondCur->Element, sizeof(StringData));
 		
 		SecondCur = SecondCur->Next;
 	}
+	
+	DestroyString(&SecondClone);
 }
 
 void InsertString(String Main, const int Index, const String Insert)
@@ -277,17 +346,24 @@ void InsertString(String Main, const int Index, const String Insert)
 	if (Main == NULL || Index < 0 || Insert == NULL)
 		return;
 	
-	__StrSplitStringIntoTwoParts(Main, Index);
-	String Concat = Main->Next;
+	if (Index >= GetStringLength(Main))
+	{
+		ConcatString(Main, Insert);
+		return;
+	}
+	
 	String InsertClone = CloneString(Insert);
 	String InsertCur = InsertClone;
+	
+	Main = __StrSplitStringIntoTwoParts(Main, Index);
+	String Concat = Main->Next;
 	
 	while (InsertCur != NULL)
 	{
 		Main->Next = CreateString();
 		Main = Main->Next;
 		
-		memcpy(Main->Element, InsertCur->Element, sizeof(StringData));
+		memcpy((void *)Main->Element, (void *)InsertCur->Element, sizeof(StringData));
 		
 		InsertCur = InsertCur->Next;
 	}
@@ -296,11 +372,165 @@ void InsertString(String Main, const int Index, const String Insert)
 	DestroyString(&InsertClone);
 }
 
-String BruteForcePatternMatch(String Main, const String Pattern);
-String KMPPatternMatch(String Main, const String Pattern);
+int CompareString(String First, String Second) /* Throws */
+{
+	CharType *SecondStr = GetCharArray(Second);
+	int Ret = CompareCharArray(First, SecondStr);
+	
+	free(SecondStr);
+	return Ret;
+}
 
-void CopyStringWithCharArray(String Dest, const CharType *Src, int Size, int TerminateString);
-void ConcatStringWithCharArray(String First, const CharType *Second);
-void InsertStringWithCharArray(String Main, const int Index, const CharType *Insert);
-String BruteForcePatternMatchWithCharArray(String Main, const CharType *Pattern);
-String KMPPatternMatchWithCharArray(String Main, const CharType *Pattern);
+String BruteForcePatternMatch(String Main, const String Pattern)
+{
+	if (Main == NULL || Pattern == NULL)
+		return NULL;
+	
+	CharType *PatStr = GetCharArray(Pattern);
+	String Ret = BruteForcePatternMatchWithCharArray(Main, PatStr);
+	
+	free(PatStr);
+	return Ret;
+}
+
+String KMPPatternMatch(String Main, const String Pattern)
+{
+	if (Main == NULL || Pattern == NULL)
+		return NULL;
+	
+	CharType *PatStr = GetCharArray(Pattern);
+	String Ret = KMPPatternMatchWithCharArray(Main, PatStr);
+	
+	free(PatStr);
+	
+	return Ret;
+}
+
+void CopyCharArray(String Dest, const CharType *Src, int Size, int TerminateString)
+{
+	if (Src == NULL)
+		return;
+	
+	String CharArray = CreateStringFromCharArray(Src);
+	CopyString(Dest, CharArray, Size, TerminateString);
+	DestroyString(&CharArray);
+}
+
+void ConcatCharArray(String First, const CharType *Second)
+{
+	if (Second == NULL)
+		return;
+	
+	String CharArray = CreateStringFromCharArray(Second);
+	ConcatString(First, CharArray);
+	DestroyString(&CharArray);
+}
+
+void InsertCharArray(String Main, const int Index, const CharType *Insert)
+{
+	if (Insert == NULL)
+		return;
+	
+	String CharArray = CreateStringFromCharArray(Insert);
+	InsertString(Main, Index, CharArray);
+	DestroyString(&CharArray);
+}
+
+int CompareCharArray(String First, const CharType *Second)
+{
+	CharType *FirstStr = GetCharArray(First);
+	
+	#ifdef __STR_OUTPUT__
+	fmt::print("Comparing {} and {}...\n", FirstStr, Second);
+	#endif
+	
+	int Ret = CharArrayCmp(FirstStr, Second);
+	
+	#ifdef __STR_OUTPUT__
+	fmt::print("Compare done with result {}.\n", Ret);
+	#endif
+	
+	free(FirstStr);
+	return Ret;
+}
+
+String BruteForcePatternMatchWithCharArray(String Main, const CharType *Pattern)
+{
+	if (Main == NULL || Pattern == NULL)
+		return NULL;
+	
+	#ifdef __STR_OUTPUT__
+	fmt::print("Checking if same length...\n");
+	#endif
+	
+	unsigned int PatLen = CharArrayLen(Pattern);
+	if (PatLen < 1 || PatLen > GetStringLength(Main))
+		return NULL;
+	
+	#ifdef __STR_OUTPUT__
+	fmt::print("Checking if same content...\n");
+	#endif
+	
+	if (!CompareCharArray(Main, Pattern))
+		return Main;
+	
+	#ifdef __STR_OUTPUT__
+	fmt::print("Initializing...\n");
+	#endif
+	
+	CharType *MainStr = GetCharArray(Main);
+	unsigned int MainPtr, PatPtr, MainCur;
+	
+	#ifdef __STR_OUTPUT__
+	fmt::print("Starting matching...\n");
+	#endif
+	
+	int i = 0;
+	for (MainPtr = 0; MainStr[MainPtr] != '\0'; MainPtr++)
+	{
+		#ifdef __STR_OUTPUT__
+		fmt::print("Matching round {}...\n", i++);
+		#endif
+		
+		for (MainCur = MainPtr, PatPtr = 0; Pattern[PatPtr] != '\0'; PatPtr++, MainCur++)
+			if (Pattern[PatPtr] != MainStr[MainCur])
+				break;
+		if (Pattern[PatPtr] == '\0')
+			break;
+	}
+	
+	#ifdef __STR_OUTPUT__
+	fmt::print("End match.\n");
+	#endif
+	
+	CharType End = MainStr[MainPtr];
+	free(MainStr);
+	
+	#ifdef __STR_OUTPUT__
+	fmt::print("MainStr freed.\n");
+	#endif
+	
+	if (End == '\0')
+		return NULL;
+	else
+	{
+		#ifdef __STR_OUTPUT__
+		fmt::print("Match found.\n");
+		#endif
+		
+		unsigned int Offset;
+		String Out = __StrWhichPartHasIndex(Main, MainPtr, NULL, &Offset);
+		if (__StrData(Out)->Head == Offset)
+			return Out;
+		else
+			return __StrSplitStringIntoTwoParts(Main, MainPtr)->Next;
+	}
+}
+
+String KMPPatternMatchWithCharArray(String Main, const CharType *Pattern)
+{
+	if (Main == NULL || Pattern == NULL)
+		return NULL;
+	
+	return NULL;
+}

@@ -90,6 +90,17 @@ Position Advance(Position P)
 	return P->Next;
 }
 
+Position At(List L, unsigned int Index)
+{
+	Position P;
+	
+	P = L;
+	while (Index-- >= 0 && P->Next != NULL)
+		P = P->Next;
+	
+	return P;
+}
+
 ElementType Retrieve(Position P)
 {
 	return P->Element;
