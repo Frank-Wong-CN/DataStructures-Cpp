@@ -30,7 +30,6 @@
 */
 
 #include "CommonDS_v2/string.c"
-// tree.c has the header of tree, node_impl (if not included previously), list, stack included
 
 #include "../Ch3/CommonDS_v2/list.c"
 #include "../Ch3/CommonDS_v2/stack.c"

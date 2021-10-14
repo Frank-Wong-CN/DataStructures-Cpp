@@ -39,11 +39,11 @@ Chapter 4 Tree
 	B-Tree ADT
 		Interface: Add, Remove, Find, Traverse (InOrder)
 		Utility: Split
-	B+Tree ADT
+	B+Tree ADT (X)
 		Interface: Add, Remove, Find, Traverse (InOrder)
 		Utility: Split
-	Red Black Tree ADT
-	Splay Tree ADT
+	Red Black Tree ADT (X)
+	Splay Tree ADT (X)
 
 Chapter 5 String (Originally Hashing, but my book does not cover this topic)
 	Sequence String
@@ -59,7 +59,13 @@ Chapter 5 String (Originally Hashing, but my book does not cover this topic)
 	KMP Algorithm
 		BFPatternMatch O(mn) where m = length of string, n = length of pattern
 		KMPPatternMatch O(m+n) where m = length of string, n = length of pattern
-		KMPTable is built around "Longest Proper Prefix that is also a Suffix Length" (LPS, Longest Prefix Suffix)
+		KMPTable is built around "Longest Proper Prefix-that-is-also-a-Suffix Length" (or just LPS, Longest Prefix Suffix)
+		***
+			Acquire LPS table (NextTable) first.
+			If match, increment both CurMainPointer and CurPatternPointer.
+			Otherwise, repeat match the same position of MainString with CurPatternPointer = NextTable[CurPatternPointer - 1] until CurPatternPointer reaches 0.
+			Just increment CurMainPointer by 1 if no match and CurPatternPointer reached 0.
+		***
 		
 
 Chapter 6 Multi-dimensional Array (Originally Heap and Priority Queue, same as above)
