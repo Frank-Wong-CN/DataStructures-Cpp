@@ -1,12 +1,8 @@
-#ifndef __STRING_H_
-#define __STRING_H_
+#ifndef _STRING_H
+#define _STRING_H
 
 #ifndef ElementType
 #define ElementType unsigned long long
-#endif
-
-#ifndef Payload
-#define Payload void *
 #endif
 
 #ifndef _NODE_IMPL_

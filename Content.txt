@@ -51,7 +51,7 @@ Chapter 5 String (Originally Hashing, but my book does not cover this topic)
 	Combined String (DONE)
 		{ StringData { StringPart (PartSize + 1), Head } , Next }
 		               └───────────┬───────────┘
-					             char[]
+					       char[PartSize + 1]
 		             └────────────────┬────────────────┘
 					               Element
 		Interface: Length, Copy, Insert, Concat, Compare, BFPatternMatch, KMPPatternMatch
@@ -60,15 +60,27 @@ Chapter 5 String (Originally Hashing, but my book does not cover this topic)
 		BFPatternMatch O(mn) where m = length of string, n = length of pattern
 		KMPPatternMatch O(m+n) where m = length of string, n = length of pattern
 		KMPTable is built around "Longest Proper Prefix-that-is-also-a-Suffix Length" (or just LPS, Longest Prefix Suffix)
+		KMP Algorithm: 
 		***
 			Acquire LPS table (NextTable) first.
 			If match, increment both CurMainPointer and CurPatternPointer.
 			Otherwise, repeat match the same position of MainString with CurPatternPointer = NextTable[CurPatternPointer - 1] until CurPatternPointer reaches 0.
 			Just increment CurMainPointer by 1 if no match and CurPatternPointer reached 0.
 		***
-		
 
 Chapter 6 Multi-dimensional Array (Originally Heap and Priority Queue, same as above)
+	2D Array
+	MD Array
+	MD Linked List
+	Cross-Linked List
+	Matrix
+	Optimized Storage for Special Matrices
+		Upper Triangle
+		Lower Triangle
+		Symmetric
+		3-Strip
+		Sparse
+	Tuple
 
 Chapter 7 Graph
 

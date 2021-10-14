@@ -17,7 +17,7 @@
 #endif
 
 #if (BTREE_T < 3)
-#error B-Tree has only degree less than 3. If you so wish to use a B-Tree this small, use BST instead!
+#error B-Tree has only degree more than 2. If you so wish to use a B-Tree this small, use BST instead!
 #endif
 
 const int BTREE_T_LEAST = (int)ceil((double)(BTREE_T - 1) / 2.0);

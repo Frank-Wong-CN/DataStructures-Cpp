@@ -1,5 +1,5 @@
-#ifndef __CHARTYPE_H_
-#define __CHARTYPE_H_
+#ifndef _CHARTYPE_H
+#define _CHARTYPE_H
 
 typedef char CharType;
 
