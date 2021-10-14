@@ -1,13 +1,15 @@
+#define __STR_OUTPUT__
+
 .L Load
 AllowRedefine
 
 String a = CreateStringFromCharArray("Lorem ipsum dolor sit amet, consectetur adipiscing elit. An eum discere ea mavis, quae cum plane perdidiceriti nihil sciat? Princeps huius civitatis Phalereus Demetrius cum patria pulsus esset iniuria, ad Ptolomaeum se regem Alexandream contulit. Nunc dicam de voluptate, nihil scilicet novi, ea tamen, quae te ipsum probaturum esse confidam. Saepe ab Aristotele, a Theophrasto mirabiliter est laudata per se ipsa rerum scientia; Nos autem non solum beatae vitae istam esse oblectationem videmus, sed etiam levamentum miseriarum. Quodsi ipsam honestatem undique pertectam atque absolutam. Ut pulsi recurrant? Cuius ad naturam apta ratio vera illa et summa lex a philosophis dicitur. Duo Reges: constructio interrete. Tum ille: Ain tandem? Nam illud quidem adduci vix possum, ut ea, quae senserit ille, tibi non vera videantur. Quodsi, ne quo incommodo afficiare, non relinques amicum, tamen, ne sine fructu alligatus sis, ut moriatur optabis.")
-BruteForcePatternMatchWithCharArray(a, "K")
-BruteForcePatternMatchWithCharArray(a, "123")
-BruteForcePatternMatchWithCharArray(a, "")
-BruteForcePatternMatchWithCharArray(a, "H")
-__StrData(BruteForcePatternMatchWithCharArray(a, "Q"))->Data
-__StrData(BruteForcePatternMatchWithCharArray(a, "e"))->Data
+KMPPatternMatchWithCharArray(a, "K")
+KMPPatternMatchWithCharArray(a, "123")
+KMPPatternMatchWithCharArray(a, "")
+KMPPatternMatchWithCharArray(a, "H")
+__StrData(KMPPatternMatchWithCharArray(a, "Q"))->Data
+__StrData(KMPPatternMatchWithCharArray(a, "e"))->Data
 
 unsigned int offset = 0;
 String b = __StrWhichPartHasIndex(a, 1, NULL, &offset)
@@ -16,17 +18,16 @@ offset
 __StrPrintPart(a)
 __StrData(b)->Data[offset]
 
-__StrData(BruteForcePatternMatchWithCharArray(a, "e"))->Head
-__StrData(BruteForcePatternMatchWithCharArray(a, "l"))->Head
+__StrData(KMPPatternMatchWithCharArray(a, "e"))->Head
+__StrData(KMPPatternMatchWithCharArray(a, "l"))->Head
 Size(a)
 __StrPrintPart(a)
-__StrData(BruteForcePatternMatchWithCharArray(a, "l"))->Data
+__StrData(KMPPatternMatchWithCharArray(a, "l"))->Data
 Size(a)
 __StrPrintPart(a)
-__StrData(BruteForcePatternMatchWithCharArray(a, "l"))->Data
-BruteForcePatternMatchWithCharArray(a, "l0")
-BruteForcePatternMatchWithCharArray(a, "lo")
-BruteForcePatternMatchWithCharArray(a, "lo")
+__StrData(KMPPatternMatchWithCharArray(a, "l"))->Data
+KMPPatternMatchWithCharArray(a, "l0")
+KMPPatternMatchWithCharArray(a, "lo")
 
-b = BruteForcePatternMatchWithCharArray(a, "lle")
+b = KMPPatternMatchWithCharArray(a, "lle")
 __StrPrint(b)

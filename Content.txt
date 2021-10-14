@@ -48,8 +48,19 @@ Chapter 4 Tree
 Chapter 5 String (Originally Hashing, but my book does not cover this topic)
 	Sequence String
 	Linked String
-	Combined String
+	Combined String (DONE)
+		{ StringData { StringPart (PartSize + 1), Head } , Next }
+		               └───────────┬───────────┘
+					             char[]
+		             └────────────────┬────────────────┘
+					               Element
+		Interface: Length, Copy, Insert, Concat, Compare, BFPatternMatch, KMPPatternMatch
+		Utility: Shift, Index2Part, Split, KMPTableBuild (IMPORTANT!)
 	KMP Algorithm
+		BFPatternMatch O(mn) where m = length of string, n = length of pattern
+		KMPPatternMatch O(m+n) where m = length of string, n = length of pattern
+		KMPTable is built around "Longest Proper Prefix that is also a Suffix Length" (LPS, Longest Prefix Suffix)
+		
 
 Chapter 6 Multi-dimensional Array (Originally Heap and Priority Queue, same as above)
 
@@ -60,3 +71,8 @@ Chapter 8 Sorting Algorithms
 Chapter 9 Indexing Algorithms
 
 Chapter 10 Advanced Structures and Designing Algorithms
+
+Other worth noting:
+	1. D(Str, Args): Debug output
+		Use regex D\("(.+?)"(, (.+?))?()\) to match all debug output macros
+		Subsititute with D\("[{}] \1", __FUNCTION__\2\) to output function name as well

@@ -2,8 +2,14 @@
 
 #ifdef __CLING__
 	#define __StrClingOutput(PrintfVer, FmtVer, ...) fmt::print(FmtVer, __VA_ARGS__)
+	#ifdef __STR_OUTPUT__
+		#define D(...) fmt::print(__VA_ARGS__)
+	#else
+		#define D(...)
+	#endif
 #else
 	#define __StrClingOutput(PrintfVer, FmtVer, ...) printf(PrintfVer, __VA_ARGS__)
+	#define D(...)
 #endif
 
 StringData *__StrData(String Str)
@@ -78,9 +84,7 @@ String __StrSplitStringIntoTwoParts(String Str, unsigned int Index)
 	if (Tmp == NULL)
 		return NULL;
 	
-	#ifdef __STR_OUTPUT__
-	fmt::print("[STRING] Spliting string \"{}\" at index {}.\n", __StrData(Tmp)->Data, Index);
-	#endif
+	D("[{}] Spliting string \"{}\" at index {}.\n", __FUNCTION__, __StrData(Tmp)->Data, Index);
 	
 	String Copy = CreateString();
 	memcpy((void *)Copy->Element, (void *)Tmp->Element, sizeof(StringData));
@@ -119,21 +123,7 @@ void __StrPrintPart(String Str)
 	}
 }
 
-List __ListBuilder(unsigned int Size)
-{
-	if (Size < 0)
-		return NULL;
-	
-	List L = CreateList();
-	unsigned int i = 0;
-	
-	for (; i < Size; i++)
-		Insert(0, L, L);
-	
-	return L;
-}
-
-List __CharArrayBuildKMPNextTable(const CharType *Str)
+unsigned int *__CharArrayBuildKMPNextTable(const CharType *Str, unsigned int *Length)
 {
 	if (Str == NULL)
 		return NULL;
@@ -144,23 +134,18 @@ List __CharArrayBuildKMPNextTable(const CharType *Str)
 	if (Len < 1)
 		return NULL;
 	
-	List T = __ListBuilder(Len);
-	T->Next->Element = -1;
+	unsigned int *T = (unsigned int *)malloc(Len * sizeof(int));
+	memset(T, 0, Len * sizeof(T));
 	
 	while (Pos < Len)
-	{
-		fmt::print("{} / {}\n", Pos, Len);
 		if (Str[Pos] == Str[Cnd])
-			At(T, Pos)->Element = At(T, Cnd)->Element;
-		else
-		{
-			At(T, Pos)->Element = Cnd;
-			while (Cnd >= 0 && Str[Pos] != Str[Cnd])
-				Cnd = At(T, Cnd)->Element;
-		}
-		Pos++;
-		Cnd++;
-	}
+			T[Pos++] = ++Cnd;
+		else if (Cnd == 0)
+			T[Pos++] = 0;
+		else Cnd = T[Cnd - 1];
+	
+	if (Length != NULL)
+		*Length = Len;
 	
 	return T;
 }
@@ -200,16 +185,13 @@ String CreateStringFromCharArray(const CharType *Str)
 	String Tmp = NULL;
 	unsigned int CopyLen = TargetLength - Start;
 	
-	#ifdef __STR_OUTPUT__
-	fmt::print("[STRING] Spliting C-string \"{}\" into {} parts. The last part has {} characters.\n", Str, LinkedItemCount, CopyLen);
-	#endif
+	D("[{}] Spliting C-string \"{}\" into {} parts. The last part has {} characters.\n", __FUNCTION__, Str, LinkedItemCount, CopyLen);
 	
 	for (; LinkedItemCount > 0; LinkedItemCount--)
 	{
+		D("[{}] Copying the {}th part. String splited from {} to {}, length {}.\n", __FUNCTION__, LinkedItemCount, Start, Start + CopyLen * sizeof(CharType) - 1, CopyLen * sizeof(CharType));
+		
 		String LatestPart = CreateString();
-		#ifdef __STR_OUTPUT__
-		fmt::print("Copying the {}th part. String splited from {} to {}, length {}.\n", LinkedItemCount, Start, Start + CopyLen * sizeof(CharType) - 1, CopyLen * sizeof(CharType));
-		#endif
 		memcpy(__StrData(LatestPart)->Data, Str + Start, CopyLen * sizeof(CharType));
 		LatestPart->Next = Tmp;
 		Tmp = LatestPart;
@@ -441,15 +423,11 @@ int CompareCharArray(String First, const CharType *Second)
 {
 	CharType *FirstStr = GetCharArray(First);
 	
-	#ifdef __STR_OUTPUT__
-	fmt::print("Comparing {} and {}...\n", FirstStr, Second);
-	#endif
+	D("[{}] Comparing {} and {}...\n", __FUNCTION__, FirstStr, Second);
 	
 	int Ret = CharArrayCmp(FirstStr, Second);
 	
-	#ifdef __STR_OUTPUT__
-	fmt::print("Compare done with result {}.\n", Ret);
-	#endif
+	D("[{}] Compare done with result {}.\n", __FUNCTION__, Ret);
 	
 	free(FirstStr);
 	return Ret;
@@ -460,39 +438,28 @@ String BruteForcePatternMatchWithCharArray(String Main, const CharType *Pattern)
 	if (Main == NULL || Pattern == NULL)
 		return NULL;
 	
-	#ifdef __STR_OUTPUT__
-	fmt::print("Checking if same length...\n");
-	#endif
+	D("[{}] Checking if same length...\n", __FUNCTION__);
 	
 	unsigned int PatLen = CharArrayLen(Pattern);
 	if (PatLen < 1 || PatLen > GetStringLength(Main))
 		return NULL;
 	
-	#ifdef __STR_OUTPUT__
-	fmt::print("Checking if same content...\n");
-	#endif
+	D("[{}] Checking if same content...\n", __FUNCTION__);
 	
 	if (!CompareCharArray(Main, Pattern))
 		return Main;
 	
-	#ifdef __STR_OUTPUT__
-	fmt::print("Initializing...\n");
-	#endif
-	
+	D("[{}] Initializing...\n", __FUNCTION__);
+		
 	CharType *MainStr = GetCharArray(Main);
 	unsigned int MainPtr, PatPtr, MainCur;
 	
-	#ifdef __STR_OUTPUT__
-	fmt::print("Starting matching...\n");
-	#endif
+	D("[{}] Starting matching...\n", __FUNCTION__);
 	
-	int i = 0;
 	for (MainPtr = 0; MainStr[MainPtr] != '\0'; MainPtr++)
 	{
-		#ifdef __STR_OUTPUT__
-		fmt::print("Matching round {}...\n", i++);
-		#endif
-		
+		//D("[{}] Matching round {}...\n", __FUNCTION__, i++);
+				
 		for (MainCur = MainPtr, PatPtr = 0; Pattern[PatPtr] != '\0'; PatPtr++, MainCur++)
 			if (Pattern[PatPtr] != MainStr[MainCur])
 				break;
@@ -500,25 +467,19 @@ String BruteForcePatternMatchWithCharArray(String Main, const CharType *Pattern)
 			break;
 	}
 	
-	#ifdef __STR_OUTPUT__
-	fmt::print("End match.\n");
-	#endif
-	
+	D("[{}] End match.\n", __FUNCTION__);
+		
 	CharType End = MainStr[MainPtr];
 	free(MainStr);
 	
-	#ifdef __STR_OUTPUT__
-	fmt::print("MainStr freed.\n");
-	#endif
-	
+	D("[{}] MainStr freed.\n", __FUNCTION__);
+		
 	if (End == '\0')
 		return NULL;
 	else
 	{
-		#ifdef __STR_OUTPUT__
-		fmt::print("Match found.\n");
-		#endif
-		
+		D("[{}] Match found.\n", __FUNCTION__);
+				
 		unsigned int Offset;
 		String Out = __StrWhichPartHasIndex(Main, MainPtr, NULL, &Offset);
 		if (__StrData(Out)->Head == Offset)
@@ -533,5 +494,53 @@ String KMPPatternMatchWithCharArray(String Main, const CharType *Pattern)
 	if (Main == NULL || Pattern == NULL)
 		return NULL;
 	
+	unsigned int PatLen, *NextTable;
+	
+	D("[{}] Building table...", __FUNCTION__);
+	
+	NextTable = __CharArrayBuildKMPNextTable(Pattern, &PatLen);
+	if (!NextTable)
+		return NULL;
+	
+	D("Done.\n");
+	D("[{}] Table for \"{}\" is as follows:\n", __FUNCTION__, Pattern);
+	#ifdef __STR_OUTPUT__
+	for (int _i = 0; _i < PatLen; _i++)
+		D("[{}]\t{} / {}: {}\n", __FUNCTION__, _i + 1, PatLen, NextTable[_i]);
+	#endif
+
+	CharType *MainStr = GetCharArray(Main);
+	unsigned int MainLen = GetStringLength(Main);
+	
+	unsigned int MainPtr = 0, PatPtr = 0;
+	
+	while (MainPtr != MainLen)
+	{
+		//D("[{}] Matching round {}...\n", __FUNCTION__, MainPtr);
+		if (PatPtr == PatLen)
+		{
+			D("[{}] Match found.\n", __FUNCTION__);
+			MainPtr -= PatLen;
+			free(NextTable);
+			free(MainStr);
+			unsigned int Offset;
+			String Out = __StrWhichPartHasIndex(Main, MainPtr, NULL, &Offset);
+			if (__StrData(Out)->Head == Offset)
+				return Out;
+			else
+				return __StrSplitStringIntoTwoParts(Main, MainPtr)->Next;
+		}
+		else if (MainStr[MainPtr] == Pattern[PatPtr])
+			MainPtr++, PatPtr++;
+		else if (PatPtr != 0)
+			PatPtr = NextTable[PatPtr - 1];
+		else
+			MainPtr++;
+	}
+	
+	D("[{}] End match.\n", __FUNCTION__);
+	
+	free(NextTable);
+	free(MainStr);
 	return NULL;
 }
