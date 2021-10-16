@@ -4,7 +4,8 @@
 #include "tnode.h"
 
 #ifndef _TNODE_IMPL_
-#error Include a tree node definition before "btree.h"!
+#include "tnode_impl_basic.h"
+#warning Tree node definition not found, basic implementation included.
 #endif
 
 #include "tree.h"
@@ -23,7 +24,7 @@
 const int BTREE_T_LEAST = (int)ceil((double)(BTREE_T - 1) / 2.0);
 const int BTREE_T_MOST = BTREE_T - 1;
 
-typedef TNode *BTree;
+typedef PTNode BTree;
 
 // ADT
 BTree BTreeCreateTree();

@@ -30,6 +30,7 @@
 */
 
 // Chapter DS here
+#include "CommonDS_v2/adjacency_list.c"
 
 #include "../Ch3/CommonDS_v2/list.c"
 #include "../Ch3/CommonDS_v2/stack.c"

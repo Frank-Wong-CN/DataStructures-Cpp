@@ -4,12 +4,13 @@
 #include "tnode.h"
 
 #ifndef _TNODE_IMPL_
-#error Include a tree node definition before "bintree.h"!
+#include "tnode_impl_basic.h"
+#warning Tree node definition not found, basic implementation included.
 #endif
 
 #include "tree.h"
 
-typedef TNode *BinaryTree;
+typedef PTNode BinaryTree, BSTTree, AVLTree;
 
 // -- General Binary Tree --
 

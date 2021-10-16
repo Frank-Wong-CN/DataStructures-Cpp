@@ -72,7 +72,7 @@ Chapter 7 String and Multi-Dimensional Array
 						T[P++] = 0
 					else
 						L = T[L - 1]
-			KMP Algorithm:
+			KMP Algorithm
 				Acquire LPS table (NextTable) first.
 				If match, increment both CurMainPointer and CurPatternPointer.
 				Otherwise, repeat match the same position of MainString with CurPatternPointer = NextTable[CurPatternPointer - 1] until CurPatternPointer reaches 0.
@@ -92,10 +92,25 @@ Chapter 7 String and Multi-Dimensional Array
 		Tuple
 
 Chapter 8 Graph
-	DS:
+	Data Structures
 		AdjacencyList
 		AdjacencyMatrix
 		Cross-Linked List
+	Concepts
+		Directed, Undirected
+		Cyclic, Acyclic
+		Connected Components
+		Strongly Connected Components
+		Spanning Tree / Forest
+		Minimum Spanning Tree
+	Algorithms
+		Shortest Path
+			BFS, DFS (Uses Queue, Stack respectively)
+			Dijkstra
+			Bellman-Ford
+		Minimum Spanning Tree
+			Kruskal
+			Prim
 
 Chapter 9 Sorting Algorithms
 

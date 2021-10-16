@@ -128,12 +128,12 @@ void Delete(ElementType X, List L)
 	}
 }
 
-void Insert(ElementType X, List L, Position P)
+Position Insert(ElementType X, List L, Position P)
 {
 	if (P == NULL)
 		P = L;
 	if (P == NULL)
-		return;
+		return NULL;
 	
 	Position TmpCell;
 	
@@ -145,6 +145,8 @@ void Insert(ElementType X, List L, Position P)
 	TmpCell->Element = X;
 	TmpCell->Next = P->Next;
 	P->Next = TmpCell;
+	
+	return TmpCell;
 }
 
 void Swap(Position A, Position B)

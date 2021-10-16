@@ -22,7 +22,7 @@ ElementType Retrieve(Position P);
 size_t Size(List L);
 
 void Delete(ElementType X, List L);
-void Insert(ElementType X, List L, Position P);
+Position Insert(ElementType X, List L, Position P);
 void Swap(Position A, Position B);
 void MakeEmpty(List L);
 void DeleteList(List *L);
