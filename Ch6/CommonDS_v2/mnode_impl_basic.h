@@ -2,12 +2,10 @@
 #define _MNODE_IMPL_
 #define _MNODE_IMPL_BASIC
 
-#include "mnode.h"
-
-struct _MultiNode
+struct _MatrixElement
 {
-	MNodeElementType Element;
-	MultiNode *Next[];
+	ElementType Element;
+	Matrix Next; // Matrices should at least be 1-dimensional
 };
 
 #endif
