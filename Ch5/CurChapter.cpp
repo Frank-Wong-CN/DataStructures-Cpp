@@ -29,7 +29,7 @@
 
 */
 
-#include "CommonDS_v2/string.c"
+// Chapter DS here
 
 #include "../Ch3/CommonDS_v2/list.c"
 #include "../Ch3/CommonDS_v2/stack.c"

@@ -45,50 +45,63 @@ Chapter 4 Tree
 	Red Black Tree ADT (X)
 	Splay Tree ADT (X)
 
-Chapter 5 String (Originally Hashing, but my book does not cover this topic)
-	Sequence String
-	Linked String
-	Combined String (DONE)
-		{ StringData { StringPart (PartSize + 1), Head } , Next }
-		               └───────────┬───────────┘
-					       char[PartSize + 1]
-		             └────────────────┬────────────────┘
-					               Element
-		Interface: Length, Copy, Insert, Concat, Compare, BFPatternMatch, KMPPatternMatch
-		Utility: Shift, Index2Part, Split, KMPTableBuild (IMPORTANT!)
-	KMP Algorithm
-		BFPatternMatch O(mn) where m = length of string, n = length of pattern
-		KMPPatternMatch O(m+n) where m = length of string, n = length of pattern
-		KMPTable is built around "Longest Proper Prefix-that-is-also-a-Suffix Length" (or just LPS, Longest Prefix Suffix)
-		KMP Algorithm: 
-		***
-			Acquire LPS table (NextTable) first.
-			If match, increment both CurMainPointer and CurPatternPointer.
-			Otherwise, repeat match the same position of MainString with CurPatternPointer = NextTable[CurPatternPointer - 1] until CurPatternPointer reaches 0.
-			Just increment CurMainPointer by 1 if no match and CurPatternPointer reached 0.
-		***
+Chapter 5 Hashing
 
-Chapter 6 Multi-dimensional Array (Originally Heap and Priority Queue, same as above)
-	2D Array
+Chapter 6 Heap and Priority Queue
+	
+Chapter 7 String and Multi-Dimensional Array
+	String
+		Sequence String
+		Linked String
+		Combined String (DONE)
+			{ StringData { StringPart (PartSize + 1), Head } , Next }
+						   └───────────┬───────────┘
+							   char[PartSize + 1]
+						 └────────────────┬────────────────┘
+									   Element
+			Interface: Length, Copy, Insert, Concat, Compare, BFPatternMatch, KMPPatternMatch
+			Utility: Shift, Index2Part, Split, KMPTableBuild (IMPORTANT!)
+		KMP Algorithm
+			BFPatternMatch O(mn) where m = length of string, n = length of pattern
+			KMPPatternMatch O(m+n) where m = length of string, n = length of pattern
+			KMPTable is built around "Longest Proper Prefix-that-is-also-a-Suffix Length" (or just LPS, Longest Prefix Suffix):
+				while (P < S.Length):
+					if (S[P] == S[L])
+						T[P++] = ++L
+					else if (L == 0)
+						T[P++] = 0
+					else
+						L = T[L - 1]
+			KMP Algorithm:
+				Acquire LPS table (NextTable) first.
+				If match, increment both CurMainPointer and CurPatternPointer.
+				Otherwise, repeat match the same position of MainString with CurPatternPointer = NextTable[CurPatternPointer - 1] until CurPatternPointer reaches 0.
+				Just increment CurMainPointer by 1 if no match and CurPatternPointer reached 0.
 	MD Array
-	MD Linked List
-	Cross-Linked List
-	Matrix
-	Optimized Storage for Special Matrices
-		Upper Triangle
-		Lower Triangle
-		Symmetric
-		3-Strip
-		Sparse
-	Tuple
+		MD Linked List
+		Cross-Linked List
+		Matrix
+		Optimized Storage for Special Matrices
+			Upper Triangle
+			Lower Triangle
+			Symmetric
+			3-Strip
+			Sparse
+				Use Tuple - (X, Y, Content)
+				Use Cross-Linked List - Better mathematical usage
+		Tuple
 
-Chapter 7 Graph
+Chapter 8 Graph
+	DS:
+		AdjacencyList
+		AdjacencyMatrix
+		Cross-Linked List
 
-Chapter 8 Sorting Algorithms
+Chapter 9 Sorting Algorithms
 
-Chapter 9 Indexing Algorithms
+Chapter 10 Indexing Algorithms
 
-Chapter 10 Advanced Structures and Designing Algorithms
+Chapter 11 Advanced Structures and Designing Algorithms
 
 Other worth noting:
 	1. D(Str, Args): Debug output
