@@ -28,6 +28,7 @@ pause>nul
 
 echo.
 echo Commiting...
+git add --all
 git commit -a -m !Arg!
 echo.
 echo Pushing...

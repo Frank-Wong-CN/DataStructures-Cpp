@@ -1,17 +1,5 @@
 #include "string.h"
 
-#ifdef __CLING__
-	#define __StrClingOutput(PrintfVer, FmtVer, ...) fmt::print(FmtVer, __VA_ARGS__)
-	#ifdef __STR_OUTPUT__
-		#define D(...) fmt::print(__VA_ARGS__)
-	#else
-		#define D(...)
-	#endif
-#else
-	#define __StrClingOutput(PrintfVer, FmtVer, ...) printf(PrintfVer, __VA_ARGS__)
-	#define D(...)
-#endif
-
 StringData *__StrData(String Str)
 { return (StringData *)Str->Element; }
 

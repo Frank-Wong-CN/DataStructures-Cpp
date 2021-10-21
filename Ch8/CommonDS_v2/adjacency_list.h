@@ -7,17 +7,23 @@
 //#include "../Ch4/CommonDS_v2/bintree.h"
 #include "../Ch3/CommonDS_v2/list.h"
 
+#ifdef __CLING__
+	#define __StrClingOutput(PrintfVer, FmtVer, ...) fmt::print(FmtVer, __VA_ARGS__)
+	#ifdef __STR_OUTPUT__
+		#define D(...) fmt::print(__VA_ARGS__)
+	#else
+		#define D(...)
+	#endif
+#else
+	#define __StrClingOutput(PrintfVer, FmtVer, ...) printf(PrintfVer, __VA_ARGS__)
+	#define D(...)
+#endif
+
 //typedef AVLTree Graph;
-typedef List Vertex, Edge, Graph;
+typedef List AdjacencyList, Vertex, Edge, Graph;
 
-void AddVertex(ElementType X, Graph G);
-void RemoveVertex(ElementType X, Graph G);
-Vertex FindVertex(ElementType X, Graph G);
+#include "graph_ds_interface.h"
 
-void Connect(ElementType X1, ElementType X2, WeightType N, Graph G, int Directed);
-void DisconnectVertex(ElementType X1, ElementType X2, Graph G, int Directed);
-
-void AttachDataToVertex(ExtraDataSize Data, ElementType V, Graph G);
-void AttachDataToEdge(ExtraDataSize Data, ElementType From, ElementType To, Graph G, int Directed);
+void PrintAdjacencyList(Graph G);
 
 #endif

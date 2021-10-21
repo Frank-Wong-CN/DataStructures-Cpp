@@ -24,6 +24,7 @@ case $Op in
 		fi
 		
 		echo "Commiting..."
+		git add --all
 		git commit -a -m $Arg
 		echo "Pushing..."
 		git push

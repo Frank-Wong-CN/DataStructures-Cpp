@@ -5,11 +5,11 @@
 #include "../Ch3/CommonDS_v2/node.h"
 
 #ifndef ElementType
-#define ElementType void *
+#define ElementType unsigned long long
 #endif
 
 #define ExtraDataSize unsigned long long
-#define WeightType unsigned long long
+#define WeightType long long
 
 struct _Node
 {

@@ -1,2 +1,31 @@
 .L Load
 AllowRedefine
+
+Graph a = CreateList();
+
+AddVertex('a', a);
+AddVertex('b', a);
+AddVertex('c', a);
+AddVertex('d', a);
+AddVertex('e', a);
+AddVertex('f', a);
+PrintAdjacencyList(a);
+
+Connect('a', 'b', 1, a, 1);
+Connect('a', 'c', 1, a, 1);
+Connect('b', 'd', 1, a, 1);
+Connect('c', 'e', 1, a, 1);
+Connect('d', 'f', 1, a, 1);
+PrintAdjacencyList(a);
+
+void DFSWalker(ElementType X, Graph G) {
+	Vertex V;
+	for (V = DepthFirstYield(X, G); V != NULL; V = DepthFirstYield(X, NULL))
+		__StrClingOutput("%d ", "{} ", V->Element);
+}
+
+void BFSWalker(ElementType X, Graph G) {
+	Vertex V;
+	for (V = BreadthFirstYield(X, G); V != NULL; V = BreadthFirstYield(X, NULL))
+		__StrClingOutput("%d ", "{} ", V->Element);
+}
