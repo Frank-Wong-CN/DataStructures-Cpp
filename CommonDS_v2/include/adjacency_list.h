@@ -3,9 +3,9 @@
 
 #include "node_impl_adjacency_list.h"
 
-//#include "../Ch7/CommonDS_v2/string.h"
-//#include "../Ch4/CommonDS_v2/bintree.h"
-#include "../Ch3/CommonDS_v2/list.h"
+//#include "string.h"
+//#include "bintree.h"
+#include "list.h"
 
 //typedef AVLTree Graph;
 typedef List AdjacencyList, Vertex, Edge, Graph;

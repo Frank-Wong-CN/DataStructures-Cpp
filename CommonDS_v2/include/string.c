@@ -1,5 +1,5 @@
 #include "string.h"
-#include "../Ch3/CommonDS_v2/common.h"
+#include "common.h"
 
 StringData *__StrData(String Str)
 { return (StringData *)Str->Element; }

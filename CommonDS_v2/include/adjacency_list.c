@@ -1,5 +1,5 @@
 #include "adjacency_list.h"
-#include "../Ch3/CommonDS_v2/common.h"
+#include "common.h"
 
 Graph CreateGraph()
 { return (Graph)CreateList(); }

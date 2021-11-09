@@ -35,28 +35,6 @@
 #define RequireArthimetic(T)
 #endif
 
-inline int Min(int a, int b)
-{
-	return (a < b ? a : b);
-}
-
-inline int Max(int a, int b)
-{
-	return (a > b ? a : b);
-}
-
-inline int Max3(int a, int b, int c)
-{
-	return (a > b ? (a > c ? a : c) : (b > c ? b : c));
-}
-
-inline void Swap(int *a, int *b)
-{
-	int tmp = *a;
-	*a = *b;
-	*b = tmp;
-}
-
 inline void Mem16(void *addr, int len)
 {
     int i;
