@@ -1,0 +1,10 @@
+#ifndef DSV2_NODE_H
+#define DSV2_NODE_H
+
+struct CommonDS_v2_List__Node;
+typedef struct CommonDS_v2_List__Node CommonDS_v2_List_Node;
+typedef struct CommonDS_v2_List__Node *CommonDS_v2_List_PNode;
+typedef CommonDS_v2_List_PNode CommonDS_v2_List;
+typedef CommonDS_v2_List_PNode CommonDS_v2_List_Position;
+
+#endif

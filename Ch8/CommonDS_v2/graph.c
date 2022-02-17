@@ -16,20 +16,30 @@ Vertex DepthFirstYield(ElementType X, Graph G)
 			return NULL;
 		
 		V = (Vertex)Pop(__Graph_CurrentYieldingGraph);
-		if (V->Param)
-			for (E = First((List)V->Param); E != NULL; E = Advance(E))
-				Push((ElementType)FindVertex(E->Element, G), __Graph_CurrentYieldingGraph);
+		if (!Find((ElementType)V, __Graph_CurrentYieldedNodeSet))
+		{
+			Enqueue((ElementType)V, __Graph_CurrentYieldedNodeSet);
+			if (V->Param)
+				for (E = First((List)V->Param); E != NULL; E = Advance(E))
+					Push((ElementType)FindVertex(E->Element, G), __Graph_CurrentYieldingGraph);
+		}
+		else V = NULL;
 		
 		Push((ElementType)G, __Graph_CurrentYieldingGraph);
 		
-		return V;
+		if (V) return V;
+		else return DepthFirstYield(X, NULL);
 	}
 	else
 	{
 		if (__Graph_CurrentYieldingGraph)
 			DisposeStack(&__Graph_CurrentYieldingGraph);
 		
+		if (__Graph_CurrentYieldedNodeSet)
+			DeleteList(&__Graph_CurrentYieldedNodeSet);
+		
 		__Graph_CurrentYieldingGraph = CreateStack();
+		__Graph_CurrentYieldedNodeSet = CreateList();
 		Push((ElementType)FindVertex(X, G), __Graph_CurrentYieldingGraph);
 		Push((ElementType)G, __Graph_CurrentYieldingGraph);
 		return DepthFirstYield(X, NULL);
@@ -52,20 +62,30 @@ Vertex BreadthFirstYield(ElementType X, Graph G)
 			return NULL;
 		
 		V = (Vertex)Dequeue(__Graph_CurrentYieldingGraph);
-		if (V->Param)
-			for (E = First((List)V->Param); E != NULL; E = Advance(E))
-				Enqueue((ElementType)FindVertex(E->Element, G), __Graph_CurrentYieldingGraph);
+		if (!Find((ElementType)V, __Graph_CurrentYieldedNodeSet))
+		{
+			Enqueue((ElementType)V, __Graph_CurrentYieldedNodeSet);
+			if (V->Param)
+				for (E = First((List)V->Param); E != NULL; E = Advance(E))
+					Enqueue((ElementType)FindVertex(E->Element, G), __Graph_CurrentYieldingGraph);
+		}
+		else V = NULL;
 		
 		Push((ElementType)G, __Graph_CurrentYieldingGraph);
 		
-		return V;
+		if (V) return V;
+		else return BreadthFirstYield(X, NULL);
 	}
 	else
 	{
 		if (__Graph_CurrentYieldingGraph)
 			DisposeQueue(&__Graph_CurrentYieldingGraph);
 		
+		if (__Graph_CurrentYieldedNodeSet)
+			DeleteList(&__Graph_CurrentYieldedNodeSet);
+		
 		__Graph_CurrentYieldingGraph = CreateQueue();
+		__Graph_CurrentYieldedNodeSet = CreateList();
 		Enqueue((ElementType)FindVertex(X, G), __Graph_CurrentYieldingGraph);
 		Push((ElementType)G, __Graph_CurrentYieldingGraph);
 		return BreadthFirstYield(X, NULL);
@@ -74,7 +94,7 @@ Vertex BreadthFirstYield(ElementType X, Graph G)
 
 void PushGraphYieldState()
 {
-	if (__Graph_CurrentYieldingGraph == NULL)
+	if (!__Graph_CurrentYieldingGraph || !__Graph_CurrentYieldedNodeSet)
 		return;
 	
 	if (__Graph_SavedYieldState == NULL)
@@ -82,12 +102,21 @@ void PushGraphYieldState()
 	
 	List Tmp = (List)CloneList(__Graph_CurrentYieldingGraph);
 	Push((ElementType)Tmp, __Graph_SavedYieldState);
+	
+	Tmp = (List)CloneList(__Graph_CurrentYieldedNodeSet);
+	Push((ElementType)Tmp, __Graph_SavedYieldState);
 }
 
 void PopGraphYieldState()
 {
 	if (__Graph_SavedYieldState == NULL)
 		return;
+	
+	if (Size(__Graph_SavedYieldState) == 0)
+		return;
+	
+	DeleteList(&__Graph_CurrentYieldedNodeSet);
+	__Graph_CurrentYieldedNodeSet = (List)Pop(__Graph_SavedYieldState);
 	
 	DeleteList(&__Graph_CurrentYieldingGraph);
 	__Graph_CurrentYieldingGraph = (Stack)Pop(__Graph_SavedYieldState);
@@ -107,6 +136,9 @@ List DepthFirstSearch(ElementType X, Graph G)
 	while (Size(S) > 0)
 	{
 		V = Find(Pop(S), G);
+		if (Find((ElementType)V, L))
+			continue;
+		
 		Insert((ElementType)V, L, Last(L));
 		if (V->Param)
 			for (E = First((List)V->Param); E != NULL; E = Advance(E))
@@ -131,6 +163,9 @@ List BreadthFirstSearch(ElementType X, Graph G)
 	while (Size(S) > 0)
 	{
 		V = Find(Dequeue(S), G);
+		if (Find((ElementType)V, L))
+			continue;
+		
 		Insert((ElementType)V, L, Last(L));
 		if (V->Param)
 			for (E = First((List)V->Param); E != NULL; E = Advance(E))
@@ -141,11 +176,23 @@ List BreadthFirstSearch(ElementType X, Graph G)
 	return L;
 }
 
-void SpanningForestFromGraph(Graph G, Tree *Out, size_t *Size);
-Graph MST_Prim(Graph G);
-Graph MST_Kruskal(Graph G);
-List PathFinding_Dijkstra(Graph G);
-List PathFinding_Floyd(Graph G);
+List SpanningForestFromGraph(Graph G);
+
+Graph MST_Prim(ElementType X, Graph G)
+{
+	Vertex V = Find(X, G);
+	if (!V)
+		return NULL;
+	
+	Graph MST = CreateList();
+	AddVertex(V, MST);
+	
+	//?
+}
+
+Graph MST_Kruskal(ElementType X, Graph G);
+List PathFinding_Dijkstra(ElementType X1, ElementType X2, Graph G);
+List PathFinding_Floyd(ElementType X1, ElementType X2, Graph G);
 
 int IsSimpleGraph(Graph G);
 int IsDirectedGraph(Graph G);
@@ -155,41 +202,42 @@ int IsPathSimple(List L);
 int IsPathCircuit(List L);
 
 // Undirected
-int IsConnectedGraph(Graph G);
-void GetAllConnectedComponents(Graph G, Graph *Out, size_t *Size);
+int IsConnectedGraph(Graph G)
+{
+	List L = GetAllConnectedComponents(G);
+	size_t R = Size(L);
+	DeleteList(&L);
+	return R == 1;
+}
+
+List GetAllConnectedComponents(Graph G)
+{
+	Vertex P, V, Y;
+	List Visited = CreateList();
+	List Components = CreateList();
+	
+	for (P = G, V = First(G); V != NULL; P = V, V = Advance(V))
+	{
+		if (Find((ElementType)V, Visited))
+			continue;
+		
+		PushGraphYieldState();
+		
+		ElementType X = Retrieve(V);
+		for (Y = DepthFirstYield(X, G); Y != NULL; Y = DepthFirstYield(X, NULL))
+			Insert((ElementType)Y, Visited, Last(Visited));
+		Insert((ElementType)P, Components, Last(Components));
+		
+		PopGraphYieldState();
+	}
+	
+	DeleteList(&Visited);
+	return Components;
+}
 
 // Directed
-int IsStronglyConnectedGraph(Graph G);
-void GetAllStronglyConnectedComponents(Graph G, Graph *Out, size_t *Size);
+int IsStronglyConnectedGraph(Graph G)
+{ return 0; }
 
-int InDegree(ElementType X, Graph G)
-{
-	if (G == NULL || !FindVertex(X, G))
-		return -1;
-	
-	Vertex V;
-	Edge E;
-	int D = 0;
-	
-	for (V = First(G); V != NULL; V = Advance(V))
-		if (V->Param)
-			for (E = First((List)V->Param); E != NULL; E = Advance(E))
-				if (E->Element == X)
-					D++;
-	
-	return D;
-}
-
-int OutDegree(ElementType X, Graph G)
-{
-	if (G == NULL)
-		return -1;
-	
-	Vertex V = FindVertex(X, G);
-	if (!V)
-		return -1;
-	
-	if (!V->Param)
-		return 0;
-	else return Size((List)V->Param);
-}
+List GetAllStronglyConnectedComponents(Graph G)
+{ return NULL; }

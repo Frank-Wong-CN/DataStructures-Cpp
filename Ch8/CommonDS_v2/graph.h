@@ -12,6 +12,7 @@
 #include "../Ch4/CommonDS_v2/tree.h"
 
 List __Graph_CurrentYieldingGraph = NULL;
+List __Graph_CurrentYieldedNodeSet = NULL;
 Stack __Graph_SavedYieldState = NULL;
 
 Vertex DepthFirstYield(ElementType X, Graph G);
@@ -19,13 +20,13 @@ Vertex BreadthFirstYield(ElementType X, Graph G);
 void PushGraphYieldState();
 void PopGraphYieldState();
 
-List DepthFirstSearch(ElementType X, Graph G);
-List BreadthFirstSearch(ElementType X, Graph G);
-void SpanningForestFromGraph(Graph G, Tree *Out, size_t *Size);
-Graph MST_Prim(Graph G);
-Graph MST_Kruskal(Graph G);
-List PathFinding_Dijkstra(Graph G);
-List PathFinding_Floyd(Graph G);
+List DepthFirstTraverse(ElementType X, Graph G);
+List BreadthFirstTraverse(ElementType X, Graph G);
+List SpanningForestFromGraph(Graph G);
+Graph MST_Prim(ElementType X, Graph G);
+Graph MST_Kruskal(ElementType X, Graph G);
+List PathFinding_Dijkstra(ElementType X1, ElementType X2, Graph G);
+List PathFinding_Floyd(ElementType X1, ElementType X2, Graph G);
 
 int IsSimpleGraph(Graph G);
 int IsDirectedGraph(Graph G);
@@ -36,13 +37,10 @@ int IsPathCircuit(List L);
 
 // Undirected
 int IsConnectedGraph(Graph G);
-void GetAllConnectedComponents(Graph G, Graph *Out, size_t *Size);
+List GetAllConnectedComponents(Graph G);
 
 // Directed
 int IsStronglyConnectedGraph(Graph G);
-void GetAllStronglyConnectedComponents(Graph G, Graph *Out, size_t *Size);
-
-int InDegree(ElementType X, Graph G);
-int OutDegree(ElementType X, Graph G);
+List GetAllStronglyConnectedComponents(Graph G);
 
 #endif

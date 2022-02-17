@@ -173,6 +173,9 @@ void MakeEmpty(List L)
 
 void DeleteList(List *L)
 {
+	if (L == NULL)
+		return;
+	
 	Position P, Tmp;
 	
 	P = *L;

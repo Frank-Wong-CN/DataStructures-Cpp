@@ -1,0 +1,17 @@
+list.c
+	modified DeleteList, when argument is NULL, just return, in order to avoid parsing NULL pointer
+
+graph.c
+	DFS and BFS modified (so that it can iterate through cyclic graphs)
+	
+
+graph.h
+	added a new global variable __Graph_CurrentYieldedNodeSet
+
+graph_ds_interface.h
+
+adjacency_list.c
+	in RemoveVertex, remove the edge list of the vertex as well
+		
+DS Interface and Graph main algorithm should be futher decoupled!
+Graph.c should not know what ds implementation is!

@@ -3,19 +3,24 @@ AllowRedefine
 
 Graph a = CreateList();
 
-AddVertex('a', a);
-AddVertex('b', a);
-AddVertex('c', a);
-AddVertex('d', a);
-AddVertex('e', a);
-AddVertex('f', a);
+AddVertex(128, a);
+AddVertex(39, a);
+AddVertex(102, a);
+AddVertex(334, a);
+AddVertex(5, a);
+AddVertex(91, a);
+AddVertex(47, a);
+AddVertex(6, a);
+AddVertex(443, a);
 PrintAdjacencyList(a);
 
-Connect('a', 'b', 1, a, 1);
-Connect('a', 'c', 1, a, 1);
-Connect('b', 'd', 1, a, 1);
-Connect('c', 'e', 1, a, 1);
-Connect('d', 'f', 1, a, 1);
+Connect(128, 39, 1, a, 1);
+Connect(128, 102, 1, a, 1);
+Connect(39, 334, 1, a, 1);
+Connect(102, 5, 1, a, 1);
+Connect(334, 91, 1, a, 1);
+Connect(91, 47, 1, a, 1);
+Connect(6, 443, 1, a, 1);
 PrintAdjacencyList(a);
 
 void DFSWalker(ElementType X, Graph G) {
@@ -29,3 +34,27 @@ void BFSWalker(ElementType X, Graph G) {
 	for (V = BreadthFirstYield(X, G); V != NULL; V = BreadthFirstYield(X, NULL))
 		__StrClingOutput("%d ", "{} ", V->Element);
 }
+
+void ListPrinter(List a) {
+	Position P = First(a);
+	Vertex V = NULL;
+	for (; P != NULL; P = Advance(P)) {
+		V = (Vertex)P->Element;
+		__StrClingOutput("%d ", "{} ", V->Element);
+	}
+}
+
+void GraphPrinter(List a) {
+	Position P;
+	int i = 0;
+	for (P = First(a); P != NULL; P = Advance(P)) {
+		__StrClingOutput("Comp %d: \n", "Comp {}: \n", i++);
+		Graph g = (Graph)P->Element;
+		PrintAdjacencyList(g);
+	}
+}
+
+List dfs = DepthFirstSearch(128, a);
+List bfs = BreadthFirstSearch(128, a);
+
+List comp = GetAllConnectedComponents(a);

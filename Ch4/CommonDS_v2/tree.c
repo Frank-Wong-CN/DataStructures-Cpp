@@ -228,6 +228,9 @@ void PopYieldState()
 	if (__SavedYieldState == NULL)
 		return;
 	
+	if (Size(__SavedYieldState) == 0)
+		return;
+	
 	DisposeStack(&__CurrentYieldingTree);
 	__CurrentYieldingTree = (Stack)Pop(__SavedYieldState);
 }

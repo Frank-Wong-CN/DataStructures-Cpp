@@ -17,7 +17,12 @@ void RemoveVertex(ElementType X, Graph G)
 	Vertex V;	
 	for (V = First(G); V != NULL; V = Advance(V))
 		if (V->Param != NULL)
-			Delete(X, (List)V->Param);
+		{
+			if (V->Element == X)
+				DeleteList((List *)&V->Param);
+			else Delete(X, (List)V->Param);
+		}
+	
 	Delete(X, G);
 }
 
@@ -80,6 +85,33 @@ Edge FindEdge(ElementType X1, ElementType X2, Graph G)
 	return Find(X2, L);
 }
 
+List FindNeighborTo(ElementType X, Graph G)
+{
+	List L = NULL;
+	
+	Vertex V = FindVertex(X, G);
+	if (V)
+		L = CloneList((List)V->Param);
+	
+	return L;
+}
+
+List FindNeighborFrom(ElementType X, Graph G)
+{
+	Vertex V = NULL;
+	Edge E = NULL;
+	
+	List L = CreateList();
+	
+	for (V = First(G); V != NULL; V = Advance(V))
+		if (V->Param)
+			for (E = First((List)V->Param); E != NULL; E = Advance(E))
+				if (E->Element == X)
+					Insert((ElementType)V, L, L);
+	
+	return L;
+}
+
 int CountEdge(Graph G)
 {
 	if (G == NULL)
@@ -140,4 +172,36 @@ void DestroyGraph(Graph *G)
 			DeleteList((List *)&(V->Param));
 	DeleteList(G);
 	*G = NULL;
+}
+
+int InDegree(ElementType X, Graph G)
+{
+	if (G == NULL || !FindVertex(X, G))
+		return -1;
+	
+	Vertex V;
+	Edge E;
+	int D = 0;
+	
+	for (V = First(G); V != NULL; V = Advance(V))
+		if (V->Param)
+			for (E = First((List)V->Param); E != NULL; E = Advance(E))
+				if (E->Element == X)
+					D++;
+	
+	return D;
+}
+
+int OutDegree(ElementType X, Graph G)
+{
+	if (G == NULL)
+		return -1;
+	
+	Vertex V = FindVertex(X, G);
+	if (!V)
+		return -1;
+	
+	if (!V->Param)
+		return 0;
+	else return Size((List)V->Param);
 }

@@ -11,7 +11,7 @@ int MSS_N3(const int A[], int N)
 		for (j = i; j < N; j++)
 		{
 			ThisSum = 0;
-			for (k = i; k <= j; k++)	// As analyzed, this loop is unnecessary and it's causing a tremendous amount of redundant calculations
+			for (k = i; k <= j; k++) // As analyzed, this loop is unnecessary and it's causing a tremendous amount of redundant calculations
 				ThisSum += A[k];
 			
 			if (ThisSum > MaxSum)
