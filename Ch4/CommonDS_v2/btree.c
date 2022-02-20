@@ -7,10 +7,8 @@ BTree BTreeCreateTree()
 	BTree T;
 	List L;
 	
-	T = CreateTree();
 	L = CreateList();
-	
-	T->Element = (ElementType)L;
+	T = CreateTree((ElementType)L);
 	
 	return T;
 }
@@ -20,8 +18,7 @@ BTree BTreeCreateTreeWithList(List *L, int Len)
 	BTree T;
 	List Br, Tmp;
 	
-	T = CreateTree();
-	T->Element = (ElementType)*L;
+	T = CreateTree((ElementType)*L);
 	
 	Br = *L;
 	for (; Len > 0; Len--)

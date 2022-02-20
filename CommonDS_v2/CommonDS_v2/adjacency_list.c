@@ -27,7 +27,7 @@ CommonDS_v2_Vertex CommonDS_v2_Graph_FindVertex(CommonDS_v2_List_ElementType X, 
 CommonDS_v2_SizeType CommonDS_v2_Graph_CountVertex(CommonDS_v2_Graph G)
 { return CommonDS_v2_List_Size(G); }
 
-void CommonDS_v2_Graph_ConnectVertex(CommonDS_v2_List_ElementType From, CommonDS_v2_List_ElementType To, CommonDS_v2_AdjacencyList_WeightType N, CommonDS_v2_Graph G, int Directed)
+void CommonDS_v2_Graph_ConnectVertex(CommonDS_v2_List_ElementType From, CommonDS_v2_List_ElementType To, CommonDS_v2_AdjacencyList_ExtraDataType N, CommonDS_v2_Graph G, int Directed)
 {
 	CommonDS_v2_Vertex V1 = CommonDS_v2_Graph_FindVertex(From, G);
 	CommonDS_v2_Vertex V2 = CommonDS_v2_Graph_FindVertex(To, G);

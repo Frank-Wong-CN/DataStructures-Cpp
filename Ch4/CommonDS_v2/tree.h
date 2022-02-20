@@ -23,7 +23,7 @@ Stack __CurrentYieldingTree = NULL;
 Stack __SavedYieldState = NULL;
 List __CurrentLevelingTree = NULL;
 
-Tree CreateTree();
+Tree CreateTree(ElementType IV);
 int HasChild(Tree T);
 int HasSibling(Tree T);
 int IsChild(Tree T, Child C);

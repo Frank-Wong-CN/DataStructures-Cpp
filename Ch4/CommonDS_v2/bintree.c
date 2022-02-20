@@ -39,9 +39,8 @@ Child AddLeft(ElementType X, BinaryTree T)
 	
 	Child N, O;
 	
-	N = (Child)CreateTree();
+	N = (Child)CreateTree(X);
 	O = FirstChild(T);
-	N->Element = X;
 	N->FirstChild = O;
 	T->FirstChild = N;
 	
@@ -55,9 +54,8 @@ Child AddRight(ElementType X, BinaryTree T)
 	
 	Child N, O;
 	
-	N = (Child)CreateTree();
+	N = (Child)CreateTree(X);
 	O = NextSibling(T);
-	N->Element = X;
 	N->NextSibling = O;
 	T->NextSibling = N;
 	

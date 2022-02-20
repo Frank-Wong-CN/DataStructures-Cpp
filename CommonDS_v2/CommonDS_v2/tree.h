@@ -20,7 +20,7 @@
 CommonDS_v2_Stack CommonDS_v2_Tree_CurrentYieldingTree = NULL;
 CommonDS_v2_Stack CommonDS_v2_Tree_SavedYieldState = NULL;
 
-CommonDS_v2_Tree CommonDS_v2_Tree_CreateTree();
+CommonDS_v2_Tree CommonDS_v2_Tree_CreateTree(CommonDS_v2_List_ElementType IV);
 int CommonDS_v2_Tree_HasChild(CommonDS_v2_Tree T);
 int CommonDS_v2_Tree_HasSibling(CommonDS_v2_Tree T);
 int CommonDS_v2_Tree_IsChild(CommonDS_v2_Tree T, CommonDS_v2_Tree_Child C);

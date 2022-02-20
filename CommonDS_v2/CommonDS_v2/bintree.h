@@ -8,6 +8,7 @@ typedef CommonDS_v2_Tree_PNode CommonDS_v2_BinaryTree, CommonDS_v2_BSTTree, Comm
 
 // -- General Binary Tree --
 
+CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_PreOrderYield(CommonDS_v2_BinaryTree T);
 CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_InOrderYield(CommonDS_v2_BinaryTree T);
 CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_PostOrderYield(CommonDS_v2_BinaryTree T);
 int CommonDS_v2_BinaryTree_HasLeft(CommonDS_v2_BinaryTree T);
@@ -20,6 +21,8 @@ CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_AddLeft(CommonDS_v2_List_ElementTy
 CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_AddRight(CommonDS_v2_List_ElementType X, CommonDS_v2_BinaryTree T);
 void CommonDS_v2_BinaryTree_RemoveLeft(CommonDS_v2_BinaryTree T);
 void CommonDS_v2_BinaryTree_RemoveRight(CommonDS_v2_BinaryTree T);
+void CommonDS_v2_BinaryTree_MakeEmpty(CommonDS_v2_BinaryTree T);
+void CommonDS_v2_BinaryTree_DeleteBinTree(CommonDS_v2_BinaryTree *T);
 
 CommonDS_v2_Tree CommonDS_v2_BinaryTree_ConvertToForest(CommonDS_v2_BinaryTree T);
 

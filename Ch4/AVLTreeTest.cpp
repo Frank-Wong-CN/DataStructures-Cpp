@@ -35,9 +35,9 @@ public:
 		N = n;
 		Arr = RdGen::ArrGen<int>(n, 0, max);
 		
-		T = CreateTree();
+		T = CreateTree(Arr[0]);
 		RecordTime(N)
-		for (int i = 0; i < n; i++)
+		for (int i = 1; i < n; i++)
 			//if (!BSTFind(Arr[i], T))
 			{
 				BSTAdd(Arr[i], T);
@@ -79,9 +79,9 @@ public:
 		N = n;
 		Arr = RdGen::ArrGen<int>(n, 0, max);
 		
-		T = CreateTree();
+		T = CreateTree(Arr[0]);
 		RecordTime(N)
-		for (int i = 0; i < n; i++)
+		for (int i = 1; i < n; i++)
 			//if (!BSTFind(Arr[i], T))
 			{
 				AVLAdd(Arr[i], T);
@@ -98,7 +98,7 @@ public:
 	
 	void RemovalTest(int n)
 	{
-		RecordTime(N)
+		RecordTime(n)
 		for (int i = 0; i < n; i++)
 		{
 			int j = RdGen::Random(0, n);

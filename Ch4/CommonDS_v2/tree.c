@@ -15,12 +15,14 @@ int __Walker_Deleter(Child CurNode, Sibling PrevNode, Tree Parent, Payload Data)
 	return 1;
 }
 
-Tree CreateTree()
+Tree CreateTree(ElementType IV)
 {
 	Tree T;
 	
 	T = (Tree)malloc(sizeof(TNode));
 	memset(T, 0, sizeof(TNode));
+	
+	T->Element = IV;
 	
 	return T;
 }
@@ -387,9 +389,7 @@ Child AddChild(ElementType X, Tree T)
 {
 	Child C;
 	
-	C = (Child)CreateTree();
-	C->Element = X;
-	
+	C = (Child)CreateTree(X);
 	AppendTree(C, T);
 	
 	return C;
@@ -399,8 +399,7 @@ Sibling AddSibling(ElementType X, Tree T)
 {
 	Sibling S, P;
 	
-	S = (Sibling)CreateTree();
-	S->Element = X;
+	S = (Sibling)CreateTree(X);
 	
 	P = T->NextSibling;
 	if (P == NULL)

@@ -6,10 +6,8 @@ CommonDS_v2_BTree CommonDS_v2_BTree_CreateTree()
 	CommonDS_v2_BTree T;
 	CommonDS_v2_List L;
 	
-	T = CommonDS_v2_Tree_CreateTree();
 	L = CommonDS_v2_List_CreateList();
-	
-	T->Element = (CommonDS_v2_List_ElementType)L;
+	T = CommonDS_v2_Tree_CreateTree((CommonDS_v2_List_ElementType)L);
 	
 	return T;
 }
@@ -19,8 +17,7 @@ CommonDS_v2_BTree CommonDS_v2_BTree_CreateTreeFromList(CommonDS_v2_List *L, Comm
 	CommonDS_v2_BTree T;
 	CommonDS_v2_List Br, Tmp;
 	
-	T = CommonDS_v2_Tree_CreateTree();
-	T->Element = (CommonDS_v2_List_ElementType)*L;
+	T = CommonDS_v2_Tree_CreateTree((CommonDS_v2_List_ElementType)*L);
 	
 	Br = *L;
 	for (; Len > 0; Len--)

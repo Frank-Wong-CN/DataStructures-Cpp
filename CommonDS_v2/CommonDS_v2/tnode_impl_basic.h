@@ -9,9 +9,13 @@
 #define CommonDS_v2_List_ElementType CommonDS_v2_PointerSize
 #endif
 
+#define CommonDS_v2_Tree_ExtraDataType CommonDS_v2_PointerSize
+
 struct CommonDS_v2_Tree__Node
 {
 	CommonDS_v2_List_ElementType Element;
+	CommonDS_v2_Tree_ExtraDataType Param;
+	CommonDS_v2_Tree_ExtraDataType Data;
 	CommonDS_v2_Tree_Child FirstChild;
 	CommonDS_v2_Tree_Sibling NextSibling;
 };

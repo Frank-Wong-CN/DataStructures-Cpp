@@ -3,6 +3,45 @@
 
 // -- General Binary Tree --
 
+CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_PreOrderYield(CommonDS_v2_BinaryTree T)
+{
+	CommonDS_v2_Tree_Child C;
+	
+	if (T == NULL) /* Yield on existing tree */
+	{
+		if (CommonDS_v2_Tree_CurrentYieldingTree == NULL) /* No existing tree to yield */
+			return NULL;
+		else
+		{
+			// If yield stack is empty, the tree is completely traversed
+			if (!CommonDS_v2_List_Size(CommonDS_v2_Tree_CurrentYieldingTree))
+				return NULL;
+			
+			// Pop the first tree node in the stack, then push the right and left child of the tree node into the stack
+			C = (CommonDS_v2_Tree_Child)CommonDS_v2_Stack_Pop(CommonDS_v2_Tree_CurrentYieldingTree);
+			// Push right child
+			if (C->NextSibling) CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)CommonDS_v2_Tree_NextSibling((CommonDS_v2_Tree)C), CommonDS_v2_Tree_CurrentYieldingTree);
+			// Push left child
+			if (C->FirstChild) CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)CommonDS_v2_Tree_FirstChild((CommonDS_v2_Tree)C), CommonDS_v2_Tree_CurrentYieldingTree);
+			return C;
+		}
+	}
+	else /* Yield new tree */
+	{
+		// Dispose previous yielding tree
+		if (CommonDS_v2_Tree_CurrentYieldingTree != NULL)
+			CommonDS_v2_Stack_Dispose(&CommonDS_v2_Tree_CurrentYieldingTree);
+		
+		// Initialize yield stack and return the root
+		CommonDS_v2_Tree_CurrentYieldingTree = CommonDS_v2_Stack_CreateStack();
+		// Push right child
+		if (T->NextSibling) CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)CommonDS_v2_Tree_NextSibling((CommonDS_v2_Tree)T), CommonDS_v2_Tree_CurrentYieldingTree);
+		// Push left child
+		if (T->FirstChild) CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)CommonDS_v2_Tree_FirstChild((CommonDS_v2_Tree)T), CommonDS_v2_Tree_CurrentYieldingTree);
+		return T;
+	}
+}
+
 // TODO
 CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_PostOrderYield(CommonDS_v2_BinaryTree T)
 { return NULL; }
@@ -37,9 +76,8 @@ CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_AddLeft(CommonDS_v2_List_ElementTy
 	
 	CommonDS_v2_Tree_Child N, O;
 	
-	N = (CommonDS_v2_Tree_Child)CommonDS_v2_Tree_CreateTree();
+	N = (CommonDS_v2_Tree_Child)CommonDS_v2_Tree_CreateTree(X);
 	O = CommonDS_v2_Tree_FirstChild(T);
-	N->Element = X;
 	N->FirstChild = O;
 	T->FirstChild = N;
 	
@@ -53,9 +91,8 @@ CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_AddRight(CommonDS_v2_List_ElementT
 	
 	CommonDS_v2_Tree_Child N, O;
 	
-	N = (CommonDS_v2_Tree_Child)CommonDS_v2_Tree_CreateTree();
+	N = (CommonDS_v2_Tree_Child)CommonDS_v2_Tree_CreateTree(X);
 	O = CommonDS_v2_Tree_NextSibling(T);
-	N->Element = X;
 	N->NextSibling = O;
 	T->NextSibling = N;
 	
@@ -63,10 +100,30 @@ CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_AddRight(CommonDS_v2_List_ElementT
 }
 
 void CommonDS_v2_BinaryTree_RemoveLeft(CommonDS_v2_BinaryTree T)
-{ CommonDS_v2_Tree_DeleteTree(&(T->FirstChild), T); }
+{ CommonDS_v2_BinaryTree_DeleteBinTree(&(T->FirstChild)); }
 
 void CommonDS_v2_BinaryTree_RemoveRight(CommonDS_v2_BinaryTree T)
-{ CommonDS_v2_Tree_DeleteTree(&(T->NextSibling), T); }
+{ CommonDS_v2_BinaryTree_DeleteBinTree(&(T->NextSibling)); }
+
+void CommonDS_v2_BinaryTree_MakeEmpty(CommonDS_v2_BinaryTree T)
+{
+	CommonDS_v2_Tree Dummy = CommonDS_v2_Tree_CreateTree(0);
+	Dummy->FirstChild = T->FirstChild;
+	CommonDS_v2_Tree_MakeEmpty(Dummy);
+	Dummy->FirstChild = T->NextSibling;
+	CommonDS_v2_Tree_MakeEmpty(Dummy);
+	CommonDS_v2_Tree_DeleteTree(&Dummy, NULL);
+	T->FirstChild = NULL;
+	T->NextSibling = NULL;
+}
+
+void CommonDS_v2_BinaryTree_DeleteBinTree(CommonDS_v2_BinaryTree *T)
+{
+	CommonDS_v2_Tree Dummy = CommonDS_v2_Tree_CreateTree(0);
+	Dummy->FirstChild = *T;
+	CommonDS_v2_Tree_DeleteTree(&Dummy, NULL);
+	*T = NULL;
+}
 
 // -- Binary Search Tree --
 

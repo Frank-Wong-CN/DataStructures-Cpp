@@ -5,6 +5,7 @@
 // If list node needs to be modified, expand the adjacency list version, not the basic version.
 // Otherwise the graph implementation would break!
 
+//#include "node_impl_basic.h"
 #include "node_impl_adjacency_list.h"
 #include "list.h"
 #include "stack.h"
@@ -46,9 +47,9 @@
 
 // Basic Types
 #define DSSizeT 				__DSVER(SizeType)
-#define DSPtr 					__DSVER(Pointer)
-#define DSPtrInt 				__DSVER(PointerSize)
-#define DSPtrIntS 				__DSVER(PointerSize_Signed)
+#define DSPtr 					__DSVER(Pointer) // void *
+#define DSPtrInt 				__DSVER(PointerSize) // unsigned long long
+#define DSPtrIntS 				__DSVER(PointerSize_Signed) // long long
 
 // Element Types
 // They are all PtrInt if not futher modified
@@ -144,6 +145,7 @@
 #define TreeDestroy				__TREE(DeleteTree)
 
 // Binary Tree Interfaces
+#define BinTreePreOrdYield		__BINTREE(PreOrderYield)
 #define BinTreeInOrdYield		__BINTREE(InOrderYield)
 #define BinTreePostOrdYield		__BINTREE(PostOrderYield)
 #define BinTreeHasLeft			__BINTREE(HasLeft)
@@ -157,8 +159,8 @@
 #define BinTreeDelRight			__BINTREE(RemoveRight)
 #define BinTreeToForest			__BINTREE(ConvertToForest)
 #define BinTreeCreate			TreeCreate
-#define BinTreeClear			TreeClear
-#define BinTreeDestroy			TreeDestroy
+#define BinTreeClear			__BINTREE(MakeEmpty)
+#define BinTreeDestroy			__BINTREE(DeleteBinTree)
 
 // Binary Search Tree Interfaces
 #define BSTAdd					__BST(Add)

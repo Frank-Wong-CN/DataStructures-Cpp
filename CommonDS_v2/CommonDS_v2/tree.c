@@ -12,12 +12,14 @@ int __CommonDS_v2_Tree_Walker_Deleter(CommonDS_v2_Tree_Child CurNode, CommonDS_v
 	return 1;
 }
 
-CommonDS_v2_Tree CommonDS_v2_Tree_CreateTree()
+CommonDS_v2_Tree CommonDS_v2_Tree_CreateTree(CommonDS_v2_List_ElementType IV)
 {
 	CommonDS_v2_Tree T;
 	
 	T = (CommonDS_v2_Tree)malloc(sizeof(CommonDS_v2_Tree_Node));
 	memset(T, 0, sizeof(CommonDS_v2_Tree_Node));
+	
+	T->Element = IV;
 	
 	return T;
 }
@@ -245,6 +247,19 @@ void CommonDS_v2_Tree_Traverse(CommonDS_v2_Tree T, CommonDS_v2_Tree_Child (*Yiel
 	CommonDS_v2_Tree_PopYieldState();
 }
 
+/**
+ * This function tries to find the node that connects C
+ * It will search T instead of R unless T is NULL
+ * First it will search T's siblings, then, if not found, it will search T's children
+ *
+ * C - Target node
+ * T - Parent or previously iterated node of the target node
+ * R - The root node of the tree
+ * P - The closest node which connects C (Output)
+ * Offset - Offset of the connection to C (FirstChild or NextSibling) (Output)
+ *
+ * Returns the pointer of P->Offset, so such connection can be modified
+ */
 CommonDS_v2_Tree *CommonDS_v2_Tree_GetClosestConnection(CommonDS_v2_Tree_Child C, CommonDS_v2_Tree T, CommonDS_v2_Tree R, CommonDS_v2_Tree *P, unsigned long long *Offset)
 {
 	CommonDS_v2_Tree Tmp;
@@ -383,9 +398,7 @@ CommonDS_v2_Tree_Child CommonDS_v2_Tree_AddChild(CommonDS_v2_List_ElementType X,
 {
 	CommonDS_v2_Tree_Child C;
 	
-	C = (CommonDS_v2_Tree_Child)CommonDS_v2_Tree_CreateTree();
-	C->Element = X;
-	
+	C = (CommonDS_v2_Tree_Child)CommonDS_v2_Tree_CreateTree(X);
 	CommonDS_v2_Tree_AppendTree(C, T);
 	
 	return C;
@@ -395,8 +408,7 @@ CommonDS_v2_Tree_Sibling CommonDS_v2_Tree_AddSibling(CommonDS_v2_List_ElementTyp
 {
 	CommonDS_v2_Tree_Sibling S, P;
 	
-	S = (CommonDS_v2_Tree_Sibling)CommonDS_v2_Tree_CreateTree();
-	S->Element = X;
+	S = (CommonDS_v2_Tree_Sibling)CommonDS_v2_Tree_CreateTree(X);
 	
 	P = T->NextSibling;
 	if (P == NULL)
@@ -426,6 +438,8 @@ void CommonDS_v2_Tree_AppendTree(CommonDS_v2_Tree Sub, CommonDS_v2_Tree Dst)
 	}
 }
 
+// While T is removed, the pointer to the sibling of T will lost, therefore P will be referencing the sibling of T
+// Also P is T's parent or previously iterated node
 void CommonDS_v2_Tree_DeleteTree(CommonDS_v2_Tree *T, CommonDS_v2_Tree P)
 {
 	if (P != NULL)
