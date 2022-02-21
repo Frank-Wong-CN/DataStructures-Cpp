@@ -34,3 +34,7 @@
 Backup/
 CommonDS_v1/
 *.zip
+*.7z
+*.bat
+*.sh
+Test*

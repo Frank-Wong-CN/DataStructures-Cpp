@@ -20,6 +20,8 @@
 #include "adjacency_list.h"
 #include "graph.h"
 
+#include "hash.h"
+
 #include "list.c"
 #include "stack.c"
 #include "queue.c"
@@ -31,6 +33,8 @@
 #include "string.c"
 #include "adjacency_list.c"
 #include "graph.c"
+
+#include "hash.c"
 
 #define __DSVER(X) 				CommonDS_v2_ ## X
 
@@ -44,12 +48,15 @@
 #define __GNS_STRING(X) 		CommonDS_v2_String_ ## X
 #define __GRAPH(X) 				CommonDS_v2_Graph_ ## X
 #define __ADJLIST(X) 			CommonDS_v2_AdjacencyList_ ## X
+#define __HASHMAP(X) 			CommonDS_v2_HashMap_ ## X
+#define __HASHFUNC(X) 			CommonDS_v2_Hash_ ## X ##Hash
 
 // Basic Types
 #define DSSizeT 				__DSVER(SizeType)
 #define DSPtr 					__DSVER(Pointer) // void *
 #define DSPtrInt 				__DSVER(PointerSize) // unsigned long long
 #define DSPtrIntS 				__DSVER(PointerSize_Signed) // long long
+#define DSHash 					__DSVER(HashType)
 
 // Element Types
 // They are all PtrInt if not futher modified
@@ -80,6 +87,9 @@
 #define Vertex					__DSVER(Vertex)
 #define Edge					__DSVER(Edge)
 #define Graph					__DSVER(Graph)
+
+// Hash Map
+#define HashMap					__DSVER(HashMap)
 
 // List Interfaces
 #define ListCreate				__LIST(CreateList)
@@ -252,3 +262,14 @@
 #define GraphGetComponents		__GRAPH(GetAllConnectedComponents)
 #define GraphIsStrongConn		__GRAPH(IsStronglyConnectedGraph)
 #define GraphGetStrongComp		__GRAPH(GetAllStronglyConnectedComponents)
+
+// Hash Functions
+#define DJBHash					__HASHFUNC(DJB)
+
+// Hash Map Interfaces
+#define HashMapCreate			__HASHMAP(Create)
+#define HashMapInsert			__HASHMAP(Insert)
+#define HashMapGet				__HASHMAP(Get)
+#define HashMapRemove			__HASHMAP(Remove)
+#define HashMapClear			__HASHMAP(Clear)
+#define HashMapDestroy			__HASHMAP(Destroy)

@@ -1,34 +1,39 @@
-#ifndef HASH_H
-#define HASH_H
+#ifndef DSV2_HASH_H
+#define DSV2_HASH_H
 
-#include "ds.h"
+#include "node_impl_adjacency_list.h"
+#include "tnode_impl_basic.h"
 
-#define CommonDS_v2_HashType DSPtrInt
+#include "common.h"
+#include "list.h"
+#include "bintree.h"
 
-typedef CommonDS_v2_HashType (*CommonDS_v2_HashFunction)(DSPtr Data, DSSizeT Size);
+#define CommonDS_v2_HashType CommonDS_v2_PointerSize
 
-typedef struct _HashMap
+typedef CommonDS_v2_HashType (*CommonDS_v2_HashFunction)(CommonDS_v2_Pointer Data, CommonDS_v2_SizeType Size);
+
+typedef struct CommonDS_v2__HashMap
 {
-	AVLTree Index;
+	CommonDS_v2_Tree Index;
 	CommonDS_v2_HashFunction Hash;
 	
-} HashMapSize, *HashMap;
+} CommonDS_v2_HashMapSize, *CommonDS_v2_HashMap;
 
-typedef struct _KeyValue
+typedef struct CommonDS_v2__KeyValue
 {
-	DSPtr Key;
-	DSSizeT KeySize;
-	DSPtr Value;
-	DSSizeT ValueSize;
-} KeyValueSize, *KeyValue;
+	CommonDS_v2_Pointer Key;
+	CommonDS_v2_SizeType KeySize;
+	CommonDS_v2_Pointer Value;
+	CommonDS_v2_SizeType ValueSize;
+} CommonDS_v2_KeyValueSize, *CommonDS_v2_KeyValue;
 
-CommonDS_v2_HashType Hash_DJBHash(DSPtr Data, DSSizeT Size);
+CommonDS_v2_HashType CommonDS_v2_Hash_DJBHash(CommonDS_v2_Pointer Data, CommonDS_v2_SizeType Size);
 
-HashMap HashMapCreate(CommonDS_v2_HashFunction Hash);
-HashMap HashMapInsert(HashMap H, DSPtr Key, DSSizeT KeySize, DSPtr Value, DSSizeT ValSize, DSPtr *OldVal, DSSizeT *OldValSize);
-KeyValue HashMapGet(HashMap H, DSPtr Key, DSSizeT KeySize);
-HashMap HashMapRemove(HashMap H, DSPtr Key, DSSizeT KeySize, DSPtr *OldVal, DSSizeT *OldValSize);
-void HashMapClear(HashMap H);
-void HashMapDestroy(HashMap *H);
+CommonDS_v2_HashMap CommonDS_v2_HashMap_Create(CommonDS_v2_HashFunction Hash);
+CommonDS_v2_HashMap CommonDS_v2_HashMap_Insert(CommonDS_v2_HashMap H, CommonDS_v2_Pointer Key, CommonDS_v2_SizeType KeySize, CommonDS_v2_Pointer Value, CommonDS_v2_SizeType ValSize, CommonDS_v2_Pointer *OldVal, CommonDS_v2_SizeType *OldValSize);
+CommonDS_v2_KeyValue CommonDS_v2_HashMap_Get(CommonDS_v2_HashMap H, CommonDS_v2_Pointer Key, CommonDS_v2_SizeType KeySize);
+CommonDS_v2_HashMap CommonDS_v2_HashMap_Remove(CommonDS_v2_HashMap H, CommonDS_v2_Pointer Key, CommonDS_v2_SizeType KeySize, CommonDS_v2_Pointer *OldVal, CommonDS_v2_SizeType *OldValSize);
+void CommonDS_v2_HashMap_Clear(CommonDS_v2_HashMap H);
+void CommonDS_v2_HashMap_Destroy(CommonDS_v2_HashMap *H);
 
 #endif

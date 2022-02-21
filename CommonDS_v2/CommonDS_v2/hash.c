@@ -1,18 +1,11 @@
 #include "hash.h"
 
-/**
- * An algorithm produced by Professor Daniel J. Bernstein and shown first
- * to the world on the usenet newsgroup comp.lang.c. It is one of the most
- * efficient hash functions ever published.
- * 
- * Taken from: http://www.partow.net/programming/hashfunctions/index.html
- */
-CommonDS_v2_HashType Hash_DJBHash(DSPtr Data, DSSizeT Size)
+CommonDS_v2_HashType CommonDS_v2_Hash_DJBHash(CommonDS_v2_Pointer Data, CommonDS_v2_SizeType Size)
 {
    CommonDS_v2_HashType hash = 5381;
    CommonDS_v2_HashType i    = 0;
    
-   DSPtrInt str  = (DSPtrInt)Data;
+   CommonDS_v2_PointerSize str  = (CommonDS_v2_PointerSize)Data;
 
    for (i = 0; i < Size; ++str, ++i)
    {
@@ -22,50 +15,50 @@ CommonDS_v2_HashType Hash_DJBHash(DSPtr Data, DSSizeT Size)
    return hash;
 }
 
-HashMap HashMapCreate(CommonDS_v2_HashFunction HashFunc)
+CommonDS_v2_HashMap CommonDS_v2_HashMap_Create(CommonDS_v2_HashFunction HashFunc)
 {
-	HashMap H;
+	CommonDS_v2_HashMap H;
 	
-	H = (HashMap)malloc(sizeof(HashMapSize));
-	memset(H, 0, sizeof(HashMapSize));
+	H = (CommonDS_v2_HashMap)malloc(sizeof(CommonDS_v2_HashMapSize));
+	memset(H, 0, sizeof(CommonDS_v2_HashMapSize));
 	
 	H->Hash = HashFunc;
-	H->Index = (AVLTree)TreeCreate(0);
+	H->Index = CommonDS_v2_Tree_CreateTree(0);
 	
 	return H;
 }
 
-HashMap HashMapInsert(HashMap H, DSPtr Key, DSSizeT KeySize, DSPtr Value, DSSizeT ValSize, DSPtr *OldVal, DSSizeT *OldValSize)
+CommonDS_v2_HashMap CommonDS_v2_HashMap_Insert(CommonDS_v2_HashMap H, CommonDS_v2_Pointer Key, CommonDS_v2_SizeType KeySize, CommonDS_v2_Pointer Value, CommonDS_v2_SizeType ValSize, CommonDS_v2_Pointer *OldVal, CommonDS_v2_SizeType *OldValSize)
 {
 	if (!H) return NULL;
 	
 	CommonDS_v2_HashType HashVal = H->Hash(Key, KeySize);
 	
-	Child DataNode;
-	List L;
+	CommonDS_v2_Tree_Child DataNode;
+	CommonDS_v2_List L;
 	
 	if (!H->Index->Param) // First entry of the map, root node has no list
 	{
-		L = ListCreate();
+		L = CommonDS_v2_List_CreateList();
 		DataNode = H->Index;
-		DataNode->Element = (DSPtrInt)HashVal;
-		DataNode->Param = (DSPtrInt)L;
+		DataNode->Element = (CommonDS_v2_PointerSize)HashVal;
+		DataNode->Param = (CommonDS_v2_PointerSize)L;
 	}
 	
 	// Get the corresponding hash node, add node if necessary
-	DataNode = (Child)AVLFind(HashVal, H->Index);
+	DataNode = (CommonDS_v2_Tree_Child)CommonDS_v2_BST_Find(HashVal, H->Index);
 	if (!DataNode)
 	{
-		L = ListCreate();
-		DataNode = AVLAdd(HashVal, H->Index);
-		DataNode->Param = (DSPtrInt)L;
+		L = CommonDS_v2_List_CreateList();
+		DataNode = CommonDS_v2_AVL_Add(HashVal, H->Index);
+		DataNode->Param = (CommonDS_v2_PointerSize)L;
 	}
-	else L = (List)DataNode->Param;
+	else L = (CommonDS_v2_List)DataNode->Param;
 	
 	// Check if the key already exists
-	for (Position P = ListFirst(L); P != NULL; P = ListAdvance(P))
+	for (CommonDS_v2_List_Position P = CommonDS_v2_List_First(L); P != NULL; P = CommonDS_v2_List_Advance(P))
 	{
-		KeyValue Cur = (KeyValue)ListRetrieve(P);
+		CommonDS_v2_KeyValue Cur = (CommonDS_v2_KeyValue)CommonDS_v2_List_Retrieve(P);
 		if (Cur->KeySize == KeySize && !memcmp(Cur->Key, Key, KeySize))
 		{
 			// Key already exists
@@ -81,31 +74,31 @@ HashMap HashMapInsert(HashMap H, DSPtr Key, DSSizeT KeySize, DSPtr Value, DSSize
 	}
 	
 	// Key does not exist
-	KeyValue KVPair = (KeyValue)malloc(sizeof(KeyValueSize));
+	CommonDS_v2_KeyValue KVPair = (CommonDS_v2_KeyValue)malloc(sizeof(CommonDS_v2_KeyValueSize));
 	*KVPair = { Key, KeySize, Value, ValSize };
 	
-	ListInsert((DSPtrInt)KVPair, L, L);
+	CommonDS_v2_List_Insert((CommonDS_v2_PointerSize)KVPair, L, L);
 	
 	return H;
 }
 
-KeyValue HashMapGet(HashMap H, DSPtr Key, DSSizeT KeySize)
+CommonDS_v2_KeyValue CommonDS_v2_HashMap_Get(CommonDS_v2_HashMap H, CommonDS_v2_Pointer Key, CommonDS_v2_SizeType KeySize)
 {
 	if (!H) return NULL;
 	
 	CommonDS_v2_HashType HashVal = H->Hash(Key, KeySize);
 	
 	// Get the hash node
-	Child DataNode = (Child)AVLFind(HashVal, H->Index);
+	CommonDS_v2_Tree_Child DataNode = (CommonDS_v2_Tree_Child)CommonDS_v2_BST_Find(HashVal, H->Index);
 	if (!DataNode)
 		return NULL;
 	
-	List L = (List)DataNode->Param;
+	CommonDS_v2_List L = (CommonDS_v2_List)DataNode->Param;
 	
 	// Find the key
-	for (Position P = ListFirst(L); P != NULL; P = ListAdvance(P))
+	for (CommonDS_v2_List_Position P = CommonDS_v2_List_First(L); P != NULL; P = CommonDS_v2_List_Advance(P))
 	{
-		KeyValue Cur = (KeyValue)ListRetrieve(P);
+		CommonDS_v2_KeyValue Cur = (CommonDS_v2_KeyValue)CommonDS_v2_List_Retrieve(P);
 		if (Cur->KeySize == KeySize && !memcmp(Cur->Key, Key, KeySize))
 			return Cur;
 	}
@@ -114,26 +107,26 @@ KeyValue HashMapGet(HashMap H, DSPtr Key, DSSizeT KeySize)
 	return NULL;
 }
 
-HashMap HashMapRemove(HashMap H, DSPtr Key, DSSizeT KeySize, DSPtr *OldVal, DSSizeT *OldValSize)
+CommonDS_v2_HashMap CommonDS_v2_HashMap_Remove(CommonDS_v2_HashMap H, CommonDS_v2_Pointer Key, CommonDS_v2_SizeType KeySize, CommonDS_v2_Pointer *OldVal, CommonDS_v2_SizeType *OldValSize)
 {
 	if (!H) return NULL;
 	
 	CommonDS_v2_HashType HashVal = H->Hash(Key, KeySize);
 	
 	// Get the hash node
-	Child DataNode = (Child)AVLFind(HashVal, H->Index);
+	CommonDS_v2_Tree_Child DataNode = (CommonDS_v2_Tree_Child)CommonDS_v2_BST_Find(HashVal, H->Index);
 	if (!DataNode)
 		return NULL;
 	
-	List L = (List)DataNode->Param;
+	CommonDS_v2_List L = (CommonDS_v2_List)DataNode->Param;
 	
 	// Find the key
-	for (Position P = ListFirst(L); P != NULL; P = ListAdvance(P))
+	for (CommonDS_v2_List_Position P = CommonDS_v2_List_First(L); P != NULL; P = CommonDS_v2_List_Advance(P))
 	{
-		KeyValue Cur = (KeyValue)ListRetrieve(P);
+		CommonDS_v2_KeyValue Cur = (CommonDS_v2_KeyValue)CommonDS_v2_List_Retrieve(P);
 		if (Cur->KeySize == KeySize && !memcmp(Cur->Key, Key, KeySize))
 		{
-			ListRemove((DSPtrInt)Cur, L);
+			CommonDS_v2_List_Delete((CommonDS_v2_PointerSize)Cur, L);
 			if (OldVal) *OldVal = Cur->Value;
 			if (OldValSize) *OldValSize = Cur->ValueSize;
 			free(Cur);
@@ -144,32 +137,32 @@ HashMap HashMapRemove(HashMap H, DSPtr Key, DSSizeT KeySize, DSPtr *OldVal, DSSi
 	return H;
 }
 
-void HashMapClear(HashMap H)
+void CommonDS_v2_HashMap_Clear(CommonDS_v2_HashMap H)
 {
 	if (!H) return;
 	
-	for (Child C = CommonDS_v2_BinaryTree_PreOrderYield(H->Index); C != NULL; C = CommonDS_v2_BinaryTree_PreOrderYield(NULL))
+	for (CommonDS_v2_Tree_Child C = CommonDS_v2_BinaryTree_PreOrderYield(H->Index); C != NULL; C = CommonDS_v2_BinaryTree_PreOrderYield(NULL))
 	{
-		List L = (List)C->Param;
-		for (Position P = ListFirst(L); P != NULL; P = ListAdvance(P))
-			free((DSPtr)P->Element); // Free all KeyValue pairs
-		ListDestroy((List *)&(C->Param)); // Free all lists
+		CommonDS_v2_List L = (CommonDS_v2_List)C->Param;
+		for (CommonDS_v2_List_Position P = CommonDS_v2_List_First(L); P != NULL; P = CommonDS_v2_List_Advance(P))
+			free((CommonDS_v2_Pointer)P->Element); // Free all KeyValue pairs
+		CommonDS_v2_List_DeleteList((CommonDS_v2_List *)&(C->Param)); // Free all lists
 	}
-	BinTreeClear(H->Index); // Empty the AVL tree
+	CommonDS_v2_BinaryTree_MakeEmpty(H->Index); // Empty the AVL tree
 }
 
-void HashMapDestroy(HashMap *H)
+void CommonDS_v2_HashMap_Destroy(CommonDS_v2_HashMap *H)
 {
 	if (!H || !(*H)) return;
 	
-	for (Child C = CommonDS_v2_BinaryTree_PreOrderYield((*H)->Index); C != NULL; C = CommonDS_v2_BinaryTree_PreOrderYield(NULL))
+	for (CommonDS_v2_Tree_Child C = CommonDS_v2_BinaryTree_PreOrderYield((*H)->Index); C != NULL; C = CommonDS_v2_BinaryTree_PreOrderYield(NULL))
 	{
-		List L = (List)C->Param;
-		for (Position P = ListFirst(L); P != NULL; P = ListAdvance(P))
-			free((DSPtr)P->Element); // Free all KeyValue pairs
-		ListDestroy((List *)&(C->Param)); // Free all lists
+		CommonDS_v2_List L = (CommonDS_v2_List)C->Param;
+		for (CommonDS_v2_List_Position P = CommonDS_v2_List_First(L); P != NULL; P = CommonDS_v2_List_Advance(P))
+			free((CommonDS_v2_Pointer)P->Element); // Free all KeyValue pairs
+		CommonDS_v2_List_DeleteList((CommonDS_v2_List *)&(C->Param)); // Free all lists
 	}
-	BinTreeDestroy(&((*H)->Index)); // Free the AVL tree
+	CommonDS_v2_BinaryTree_DeleteBinTree(&((*H)->Index)); // Free the AVL tree
 	
 	free(*H);
 	*H = NULL;
