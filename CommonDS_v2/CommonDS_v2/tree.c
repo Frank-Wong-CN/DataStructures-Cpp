@@ -1,7 +1,7 @@
 #include "tree.h"
 #include "common.h"
 
-int __CommonDS_v2_Tree_Walker_Deleter(CommonDS_v2_Tree_Child CurNode, CommonDS_v2_Tree_Sibling PrevNode, CommonDS_v2_Tree Parent, CommonDS_v2_Tree_PayloadType Data)
+int __CommonDS_v2_Tree_Walker_Deleter(CommonDS_v2_Tree_Child CurNode, CommonDS_v2_Tree_Sibling PrevNode, CommonDS_v2_Tree Parent)
 {
 	if (Parent == NULL)
 		return 0;
@@ -231,7 +231,7 @@ void CommonDS_v2_Tree_PopYieldState()
 	CommonDS_v2_Tree_CurrentYieldingTree = (CommonDS_v2_Stack)CommonDS_v2_Stack_Pop(CommonDS_v2_Tree_SavedYieldState);
 }
 
-void CommonDS_v2_Tree_Traverse(CommonDS_v2_Tree T, CommonDS_v2_Tree_Child (*Yielder)(CommonDS_v2_Tree T), int (*F)(CommonDS_v2_Tree_Child CurNode, CommonDS_v2_Tree_Sibling PrevNode, CommonDS_v2_Tree Parent, CommonDS_v2_Tree_PayloadType Data), CommonDS_v2_Tree_PayloadType D)
+void CommonDS_v2_Tree_Traverse(CommonDS_v2_Tree T, CommonDS_v2_Tree_Child (*Yielder)(CommonDS_v2_Tree T), int (*F)(CommonDS_v2_Tree_Child CurNode, CommonDS_v2_Tree_Sibling PrevNode, CommonDS_v2_Tree Parent))
 {
 	CommonDS_v2_Tree_PushYieldState();
 	
@@ -240,7 +240,7 @@ void CommonDS_v2_Tree_Traverse(CommonDS_v2_Tree T, CommonDS_v2_Tree_Child (*Yiel
 	for (Prev = NULL, Cur = (CommonDS_v2_Tree)Yielder(T); Cur != NULL; Prev = Cur, Cur = (CommonDS_v2_Tree)Yielder(NULL))
 	{
 		Par = CommonDS_v2_Tree_CurrentYieldParent();
-		if (!F(Cur, Prev, Par, D))
+		if (!F(Cur, Prev, Par))
 			break;
 	}
 	
@@ -446,7 +446,7 @@ void CommonDS_v2_Tree_DeleteTree(CommonDS_v2_Tree *T, CommonDS_v2_Tree P)
 		if ((P = (CommonDS_v2_Tree)CommonDS_v2_Tree_GetClosestConnection(*T, P, NULL, NULL, NULL)) != NULL)
 			*((CommonDS_v2_Tree *)P) = (*T)->NextSibling;
 
-	CommonDS_v2_Tree_Traverse(*T, CommonDS_v2_Tree_PostOrderYield, __CommonDS_v2_Tree_Walker_Deleter, (CommonDS_v2_Tree_PayloadType)0);
+	CommonDS_v2_Tree_Traverse(*T, CommonDS_v2_Tree_PostOrderYield, __CommonDS_v2_Tree_Walker_Deleter);
 	free(*T);
 	
 	*T = NULL;
@@ -454,7 +454,7 @@ void CommonDS_v2_Tree_DeleteTree(CommonDS_v2_Tree *T, CommonDS_v2_Tree P)
 
 void CommonDS_v2_Tree_MakeEmpty(CommonDS_v2_Tree T)
 {
-	CommonDS_v2_Tree_Traverse(T, CommonDS_v2_Tree_PostOrderYield, __CommonDS_v2_Tree_Walker_Deleter, (CommonDS_v2_Tree_PayloadType)0);
+	CommonDS_v2_Tree_Traverse(T, CommonDS_v2_Tree_PostOrderYield, __CommonDS_v2_Tree_Walker_Deleter);
 	T->FirstChild = NULL;
 }
 

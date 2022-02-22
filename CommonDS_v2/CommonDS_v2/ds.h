@@ -271,5 +271,6 @@
 #define HashMapInsert			__HASHMAP(Insert)
 #define HashMapGet				__HASHMAP(Get)
 #define HashMapRemove			__HASHMAP(Remove)
+#define HashMapSize				__HASHMAP(Size)
 #define HashMapClear			__HASHMAP(Clear)
 #define HashMapDestroy			__HASHMAP(Destroy)

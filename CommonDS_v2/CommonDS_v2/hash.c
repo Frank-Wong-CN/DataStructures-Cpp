@@ -75,7 +75,10 @@ CommonDS_v2_HashMap CommonDS_v2_HashMap_Insert(CommonDS_v2_HashMap H, CommonDS_v
 	
 	// Key does not exist
 	CommonDS_v2_KeyValue KVPair = (CommonDS_v2_KeyValue)malloc(sizeof(CommonDS_v2_KeyValueSize));
-	*KVPair = { Key, KeySize, Value, ValSize };
+	KVPair->Key = Key;
+	KVPair->KeySize = KeySize;
+	KVPair->Value = Value;
+	KVPair->ValueSize = ValSize;
 	
 	CommonDS_v2_List_Insert((CommonDS_v2_PointerSize)KVPair, L, L);
 	
@@ -116,7 +119,7 @@ CommonDS_v2_HashMap CommonDS_v2_HashMap_Remove(CommonDS_v2_HashMap H, CommonDS_v
 	// Get the hash node
 	CommonDS_v2_Tree_Child DataNode = (CommonDS_v2_Tree_Child)CommonDS_v2_BST_Find(HashVal, H->Index);
 	if (!DataNode)
-		return NULL;
+		return H;
 	
 	CommonDS_v2_List L = (CommonDS_v2_List)DataNode->Param;
 	
@@ -135,6 +138,19 @@ CommonDS_v2_HashMap CommonDS_v2_HashMap_Remove(CommonDS_v2_HashMap H, CommonDS_v
 	}
 	
 	return H;
+}
+
+CommonDS_v2_SizeType CommonDS_v2_HashMap_Size(CommonDS_v2_HashMap H)
+{
+	if (!H) return 0;
+	
+	CommonDS_v2_PointerSize_Signed S;
+	
+	for (CommonDS_v2_Tree_Child C = CommonDS_v2_BinaryTree_PreOrderYield(H->Index); C != NULL; C = CommonDS_v2_BinaryTree_PreOrderYield(NULL))
+		for (CommonDS_v2_List_Position P = CommonDS_v2_List_First((CommonDS_v2_List)C->Param); P != NULL; P = CommonDS_v2_List_Advance(P))
+			S += 1;
+	
+	return S;
 }
 
 void CommonDS_v2_HashMap_Clear(CommonDS_v2_HashMap H)

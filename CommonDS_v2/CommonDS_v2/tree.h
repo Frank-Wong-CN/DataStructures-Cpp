@@ -10,10 +10,6 @@
 #endif
 #endif
 
-#ifndef CommonDS_v2_Tree_PayloadType
-#define CommonDS_v2_Tree_PayloadType CommonDS_v2_PointerSize
-#endif
-
 #include "stack.h"
 #include "queue.h"
 
@@ -35,7 +31,7 @@ CommonDS_v2_Tree_Child CommonDS_v2_Tree_TopDownLevelYield(CommonDS_v2_Tree T);
 CommonDS_v2_Tree CommonDS_v2_Tree_CurrentYieldParent();
 void CommonDS_v2_Tree_PushYieldState();
 void CommonDS_v2_Tree_PopYieldState();
-void CommonDS_v2_Tree_Traverse(CommonDS_v2_Tree T, CommonDS_v2_Tree_Child (*Yielder)(CommonDS_v2_Tree T), int (*F)(CommonDS_v2_Tree_Child CurNode, CommonDS_v2_Tree_Sibling PrevNode, CommonDS_v2_Tree Parent, CommonDS_v2_Tree_PayloadType Data), CommonDS_v2_Tree_PayloadType D);
+void CommonDS_v2_Tree_Traverse(CommonDS_v2_Tree T, CommonDS_v2_Tree_Child (*Yielder)(CommonDS_v2_Tree T), int (*F)(CommonDS_v2_Tree_Child CurNode, CommonDS_v2_Tree_Sibling PrevNode, CommonDS_v2_Tree Parent));
 CommonDS_v2_Tree *CommonDS_v2_Tree_GetClosestConnection(CommonDS_v2_Tree_Child C, CommonDS_v2_Tree T, CommonDS_v2_Tree R, CommonDS_v2_Tree *P, unsigned long long *Offset);
 CommonDS_v2_Tree_Child CommonDS_v2_Tree_FirstChild(CommonDS_v2_Tree T);
 CommonDS_v2_Tree_Sibling CommonDS_v2_Tree_NextSibling(CommonDS_v2_Tree_Sibling S);

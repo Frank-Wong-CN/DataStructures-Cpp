@@ -33,6 +33,7 @@ CommonDS_v2_HashMap CommonDS_v2_HashMap_Create(CommonDS_v2_HashFunction Hash);
 CommonDS_v2_HashMap CommonDS_v2_HashMap_Insert(CommonDS_v2_HashMap H, CommonDS_v2_Pointer Key, CommonDS_v2_SizeType KeySize, CommonDS_v2_Pointer Value, CommonDS_v2_SizeType ValSize, CommonDS_v2_Pointer *OldVal, CommonDS_v2_SizeType *OldValSize);
 CommonDS_v2_KeyValue CommonDS_v2_HashMap_Get(CommonDS_v2_HashMap H, CommonDS_v2_Pointer Key, CommonDS_v2_SizeType KeySize);
 CommonDS_v2_HashMap CommonDS_v2_HashMap_Remove(CommonDS_v2_HashMap H, CommonDS_v2_Pointer Key, CommonDS_v2_SizeType KeySize, CommonDS_v2_Pointer *OldVal, CommonDS_v2_SizeType *OldValSize);
+CommonDS_v2_SizeType CommonDS_v2_HashMap_Size(CommonDS_v2_HashMap H);
 void CommonDS_v2_HashMap_Clear(CommonDS_v2_HashMap H);
 void CommonDS_v2_HashMap_Destroy(CommonDS_v2_HashMap *H);
 
