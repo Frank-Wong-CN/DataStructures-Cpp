@@ -1,6 +1,7 @@
 #include "common.h"
 
 #define CommonDS_v2_List_ElementType CommonDS_v2_PointerSize
+#define CommonDS_v2_Tree_ElementType CommonDS_v2_PointerSize
 
 // If list node needs to be modified, expand the adjacency list version, not the basic version.
 // Otherwise the graph implementation would break!
@@ -54,16 +55,11 @@
 // Basic Types
 #define DSSizeT 				__DSVER(SizeType)
 #define DSPtr 					__DSVER(Pointer) // void *
-#define DSPtrInt 				__DSVER(PointerSize) // unsigned long long
-#define DSPtrIntS 				__DSVER(PointerSize_Signed) // long long
+#define DSInt 					__DSVER(PointerSize) // unsigned long long
+#define DSIntS 					__DSVER(PointerSize_Signed) // long long
 #define DSHash 					__DSVER(HashType)
 
-// Element Types
-// They are all PtrInt if not futher modified
-#define ElemType 				__LIST(ElementType)
-#define PayloadType 			__TREE(PayloadType)
-#define ExtraDataType 			__ADJLIST(ExtraDataType)
-#define WeightType 				__ADJLIST(WeightType)
+// Elem Types are removed, use Basic Types instead
 
 // Lists
 #define List					__DSVER(List)
@@ -229,6 +225,12 @@
 #define GraphRemoveVertex		__GRAPH(RemoveVertex)
 #define GraphFindVertex			__GRAPH(FindVertex)
 #define GraphCountVertex		__GRAPH(CountVertex)
+#define GraphRetrieveVertex		__GRAPH(VertexRetrieve)
+#define GraphRetrieveEdge		__GRAPH(EdgeRetrieve)
+#define GraphIterateEdge		__GRAPH(VertexIterateEdge)
+#define GraphNextEdge			__GRAPH(VertexNextEdge)
+#define GraphGetWeight			__GRAPH(GetWeight)
+#define GraphSetWeight			__GRAPH(SetWeight)
 #define GraphConnect			__GRAPH(ConnectVertex)
 #define GraphDisconnect			__GRAPH(DisconnectVertex)
 #define GraphFindEdge			__GRAPH(FindEdge)

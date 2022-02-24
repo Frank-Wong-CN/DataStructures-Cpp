@@ -7,7 +7,7 @@ CommonDS_v2_BTree CommonDS_v2_BTree_CreateTree()
 	CommonDS_v2_List L;
 	
 	L = CommonDS_v2_List_CreateList();
-	T = CommonDS_v2_Tree_CreateTree((CommonDS_v2_List_ElementType)L);
+	T = CommonDS_v2_Tree_CreateTree((CommonDS_v2_Tree_ElementType)L);
 	
 	return T;
 }
@@ -17,7 +17,7 @@ CommonDS_v2_BTree CommonDS_v2_BTree_CreateTreeFromList(CommonDS_v2_List *L, Comm
 	CommonDS_v2_BTree T;
 	CommonDS_v2_List Br, Tmp;
 	
-	T = CommonDS_v2_Tree_CreateTree((CommonDS_v2_List_ElementType)*L);
+	T = CommonDS_v2_Tree_CreateTree((CommonDS_v2_Tree_ElementType)*L);
 	
 	Br = *L;
 	for (; Len > 0; Len--)
@@ -76,7 +76,7 @@ void __CommonDS_v2_BTree_SplitDown(CommonDS_v2_BTree T, CommonDS_v2_BTree P)
 			
 			Tmp = (CommonDS_v2_List)*Elem;
 			*Elem = (CommonDS_v2_List)R->Element;
-			R->Element = (CommonDS_v2_List_ElementType)Tmp;
+			R->Element = (CommonDS_v2_Tree_ElementType)Tmp;
 		}
 		else // Propagate upwards
 		{
@@ -86,7 +86,7 @@ void __CommonDS_v2_BTree_SplitDown(CommonDS_v2_BTree T, CommonDS_v2_BTree P)
 			
 			Tmp = (CommonDS_v2_List)*Elem;
 			*Elem = (CommonDS_v2_List)R->Element;
-			R->Element = (CommonDS_v2_List_ElementType)Tmp;
+			R->Element = (CommonDS_v2_Tree_ElementType)Tmp;
 			
 			R->NextSibling = T->NextSibling;
 			T->NextSibling = R;
@@ -105,7 +105,7 @@ void __CommonDS_v2_BTree_SplitDown(CommonDS_v2_BTree T, CommonDS_v2_BTree P)
 	}
 }
 
-void __CommonDS_v2_BTree_RecursiveAdd(CommonDS_v2_List_ElementType X, CommonDS_v2_BTree T, CommonDS_v2_BTree P)
+void __CommonDS_v2_BTree_RecursiveAdd(CommonDS_v2_Tree_ElementType X, CommonDS_v2_BTree T, CommonDS_v2_BTree P)
 {
 	CommonDS_v2_List L = (CommonDS_v2_List)T->Element;
 	CommonDS_v2_Tree_Child C;
@@ -128,12 +128,12 @@ void __CommonDS_v2_BTree_RecursiveAdd(CommonDS_v2_List_ElementType X, CommonDS_v
 	__CommonDS_v2_BTree_SplitDown(T, P);
 }
 
-void CommonDS_v2_BTree_Add(CommonDS_v2_List_ElementType X, CommonDS_v2_BTree T)
+void CommonDS_v2_BTree_Add(CommonDS_v2_Tree_ElementType X, CommonDS_v2_BTree T)
 {
 	__CommonDS_v2_BTree_RecursiveAdd(X, T, NULL);
 }
 
 // TODO
 void CommonDS_v2_BTree_RemoveNode(CommonDS_v2_Tree_Child C, CommonDS_v2_BTree T) {}
-void CommonDS_v2_BTree_RemoveValue(CommonDS_v2_List_ElementType X, CommonDS_v2_BTree T) {}
-CommonDS_v2_Tree_Child CommonDS_v2_BTree_Find(CommonDS_v2_List_ElementType X, CommonDS_v2_BTree T) { return NULL; }
+void CommonDS_v2_BTree_RemoveValue(CommonDS_v2_Tree_ElementType X, CommonDS_v2_BTree T) {}
+CommonDS_v2_Tree_Child CommonDS_v2_BTree_Find(CommonDS_v2_Tree_ElementType X, CommonDS_v2_BTree T) { return NULL; }

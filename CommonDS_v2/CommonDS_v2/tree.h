@@ -16,7 +16,7 @@
 CommonDS_v2_Stack CommonDS_v2_Tree_CurrentYieldingTree = NULL;
 CommonDS_v2_Stack CommonDS_v2_Tree_SavedYieldState = NULL;
 
-CommonDS_v2_Tree CommonDS_v2_Tree_CreateTree(CommonDS_v2_List_ElementType IV);
+CommonDS_v2_Tree CommonDS_v2_Tree_CreateTree(CommonDS_v2_Tree_ElementType IV);
 int CommonDS_v2_Tree_HasChild(CommonDS_v2_Tree T);
 int CommonDS_v2_Tree_HasSibling(CommonDS_v2_Tree T);
 int CommonDS_v2_Tree_IsChild(CommonDS_v2_Tree T, CommonDS_v2_Tree_Child C);
@@ -35,11 +35,11 @@ void CommonDS_v2_Tree_Traverse(CommonDS_v2_Tree T, CommonDS_v2_Tree_Child (*Yiel
 CommonDS_v2_Tree *CommonDS_v2_Tree_GetClosestConnection(CommonDS_v2_Tree_Child C, CommonDS_v2_Tree T, CommonDS_v2_Tree R, CommonDS_v2_Tree *P, unsigned long long *Offset);
 CommonDS_v2_Tree_Child CommonDS_v2_Tree_FirstChild(CommonDS_v2_Tree T);
 CommonDS_v2_Tree_Sibling CommonDS_v2_Tree_NextSibling(CommonDS_v2_Tree_Sibling S);
-CommonDS_v2_List_ElementType CommonDS_v2_Tree_Retrieve(CommonDS_v2_Tree_PNode N);
+CommonDS_v2_Tree_ElementType CommonDS_v2_Tree_Retrieve(CommonDS_v2_Tree_PNode N);
 
-void CommonDS_v2_Tree_Delete(CommonDS_v2_List_ElementType X, CommonDS_v2_Tree T, CommonDS_v2_Tree_Child (*Yielder)(CommonDS_v2_Tree T), int DeleteSubTreeAsWell);
-CommonDS_v2_Tree_Child CommonDS_v2_Tree_AddChild(CommonDS_v2_List_ElementType X, CommonDS_v2_Tree T);
-CommonDS_v2_Tree_Sibling CommonDS_v2_Tree_AddSibling(CommonDS_v2_List_ElementType X, CommonDS_v2_Tree T);
+void CommonDS_v2_Tree_Delete(CommonDS_v2_Tree_ElementType X, CommonDS_v2_Tree T, CommonDS_v2_Tree_Child (*Yielder)(CommonDS_v2_Tree T), int DeleteSubTreeAsWell);
+CommonDS_v2_Tree_Child CommonDS_v2_Tree_AddChild(CommonDS_v2_Tree_ElementType X, CommonDS_v2_Tree T);
+CommonDS_v2_Tree_Sibling CommonDS_v2_Tree_AddSibling(CommonDS_v2_Tree_ElementType X, CommonDS_v2_Tree T);
 void CommonDS_v2_Tree_AppendTree(CommonDS_v2_Tree Sub, CommonDS_v2_Tree Dst);
 void CommonDS_v2_Tree_DeleteTree(CommonDS_v2_Tree *T, CommonDS_v2_Tree P);
 void CommonDS_v2_Tree_MakeEmpty(CommonDS_v2_Tree T);

@@ -15,6 +15,7 @@
 #include "tree.h"
 
 CommonDS_v2_List CommonDS_v2_Graph_CurrentYieldingGraph = NULL;
+CommonDS_v2_List CommonDS_v2_Graph_CurrentYieldedNodeSet = NULL;
 CommonDS_v2_Stack CommonDS_v2_Graph_SavedYieldState = NULL;
 
 CommonDS_v2_Vertex CommonDS_v2_Graph_DepthFirstYield(CommonDS_v2_List_ElementType X, CommonDS_v2_Graph G);

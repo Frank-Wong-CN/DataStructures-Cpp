@@ -20,9 +20,9 @@ CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_PreOrderYield(CommonDS_v2_BinaryTr
 			// Pop the first tree node in the stack, then push the right and left child of the tree node into the stack
 			C = (CommonDS_v2_Tree_Child)CommonDS_v2_Stack_Pop(CommonDS_v2_Tree_CurrentYieldingTree);
 			// Push right child
-			if (C->NextSibling) CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)CommonDS_v2_Tree_NextSibling((CommonDS_v2_Tree)C), CommonDS_v2_Tree_CurrentYieldingTree);
+			if (C->NextSibling) CommonDS_v2_Stack_Push((CommonDS_v2_Tree_ElementType)CommonDS_v2_Tree_NextSibling((CommonDS_v2_Tree)C), CommonDS_v2_Tree_CurrentYieldingTree);
 			// Push left child
-			if (C->FirstChild) CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)CommonDS_v2_Tree_FirstChild((CommonDS_v2_Tree)C), CommonDS_v2_Tree_CurrentYieldingTree);
+			if (C->FirstChild) CommonDS_v2_Stack_Push((CommonDS_v2_Tree_ElementType)CommonDS_v2_Tree_FirstChild((CommonDS_v2_Tree)C), CommonDS_v2_Tree_CurrentYieldingTree);
 			return C;
 		}
 	}
@@ -35,9 +35,9 @@ CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_PreOrderYield(CommonDS_v2_BinaryTr
 		// Initialize yield stack and return the root
 		CommonDS_v2_Tree_CurrentYieldingTree = CommonDS_v2_Stack_CreateStack();
 		// Push right child
-		if (T->NextSibling) CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)CommonDS_v2_Tree_NextSibling((CommonDS_v2_Tree)T), CommonDS_v2_Tree_CurrentYieldingTree);
+		if (T->NextSibling) CommonDS_v2_Stack_Push((CommonDS_v2_Tree_ElementType)CommonDS_v2_Tree_NextSibling((CommonDS_v2_Tree)T), CommonDS_v2_Tree_CurrentYieldingTree);
 		// Push left child
-		if (T->FirstChild) CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)CommonDS_v2_Tree_FirstChild((CommonDS_v2_Tree)T), CommonDS_v2_Tree_CurrentYieldingTree);
+		if (T->FirstChild) CommonDS_v2_Stack_Push((CommonDS_v2_Tree_ElementType)CommonDS_v2_Tree_FirstChild((CommonDS_v2_Tree)T), CommonDS_v2_Tree_CurrentYieldingTree);
 		return T;
 	}
 }
@@ -55,10 +55,10 @@ int CommonDS_v2_BinaryTree_HasLeft(CommonDS_v2_BinaryTree T)
 int CommonDS_v2_BinaryTree_HasRight(CommonDS_v2_BinaryTree T)
 { return CommonDS_v2_Tree_HasSibling(T); }
 
-CommonDS_v2_List_ElementType CommonDS_v2_BinaryTree_RetrieveLeft(CommonDS_v2_BinaryTree T)
+CommonDS_v2_Tree_ElementType CommonDS_v2_BinaryTree_RetrieveLeft(CommonDS_v2_BinaryTree T)
 { return CommonDS_v2_Tree_Retrieve(CommonDS_v2_Tree_FirstChild(T)); }
 
-CommonDS_v2_List_ElementType CommonDS_v2_BinaryTree_RetrieveRight(CommonDS_v2_BinaryTree T)
+CommonDS_v2_Tree_ElementType CommonDS_v2_BinaryTree_RetrieveRight(CommonDS_v2_BinaryTree T)
 { return CommonDS_v2_Tree_Retrieve(CommonDS_v2_Tree_NextSibling(T)); }
 
 CommonDS_v2_SizeType CommonDS_v2_BinaryTree_Depth(CommonDS_v2_BinaryTree T)
@@ -69,7 +69,7 @@ CommonDS_v2_SizeType CommonDS_v2_BinaryTree_Depth(CommonDS_v2_BinaryTree T)
 	return 1 + Max(CommonDS_v2_BinaryTree_Depth(CommonDS_v2_Tree_FirstChild(T)), CommonDS_v2_BinaryTree_Depth(CommonDS_v2_Tree_NextSibling(T)));
 }
 
-CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_AddLeft(CommonDS_v2_List_ElementType X, CommonDS_v2_BinaryTree T)
+CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_AddLeft(CommonDS_v2_Tree_ElementType X, CommonDS_v2_BinaryTree T)
 {
 	if (T == NULL)
 		return NULL;
@@ -84,7 +84,7 @@ CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_AddLeft(CommonDS_v2_List_ElementTy
 	return N;
 }
 
-CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_AddRight(CommonDS_v2_List_ElementType X, CommonDS_v2_BinaryTree T)
+CommonDS_v2_Tree_Child CommonDS_v2_BinaryTree_AddRight(CommonDS_v2_Tree_ElementType X, CommonDS_v2_BinaryTree T)
 {
 	if (T == NULL)
 		return NULL;
@@ -127,7 +127,7 @@ void CommonDS_v2_BinaryTree_DeleteBinTree(CommonDS_v2_BinaryTree *T)
 
 // -- Binary Search Tree --
 
-CommonDS_v2_Tree_Child CommonDS_v2_BST_Add(CommonDS_v2_List_ElementType X, CommonDS_v2_BinaryTree T)
+CommonDS_v2_Tree_Child CommonDS_v2_BST_Add(CommonDS_v2_Tree_ElementType X, CommonDS_v2_BinaryTree T)
 {
 	if (T == NULL)
 		return NULL;
@@ -148,7 +148,7 @@ CommonDS_v2_Tree_Child CommonDS_v2_BST_Add(CommonDS_v2_List_ElementType X, Commo
 	}
 }
 
-CommonDS_v2_Tree_Child CommonDS_v2_BST_Find(CommonDS_v2_List_ElementType X, CommonDS_v2_BinaryTree T)
+CommonDS_v2_Tree_Child CommonDS_v2_BST_Find(CommonDS_v2_Tree_ElementType X, CommonDS_v2_BinaryTree T)
 {
 	if (T == NULL)
 		return NULL;
@@ -160,7 +160,7 @@ CommonDS_v2_Tree_Child CommonDS_v2_BST_Find(CommonDS_v2_List_ElementType X, Comm
 	return T;
 }
 
-CommonDS_v2_Tree_Child CommonDS_v2_BST_FindMax(CommonDS_v2_BinaryTree T, CommonDS_v2_List_ElementType *Max)
+CommonDS_v2_Tree_Child CommonDS_v2_BST_FindMax(CommonDS_v2_BinaryTree T, CommonDS_v2_Tree_ElementType *Max)
 {
 	while (T != NULL)
 		if (T->NextSibling != NULL)
@@ -173,7 +173,7 @@ CommonDS_v2_Tree_Child CommonDS_v2_BST_FindMax(CommonDS_v2_BinaryTree T, CommonD
 	return T;
 }
 
-CommonDS_v2_Tree_Child CommonDS_v2_BST_FindMin(CommonDS_v2_BinaryTree T, CommonDS_v2_List_ElementType *Min)
+CommonDS_v2_Tree_Child CommonDS_v2_BST_FindMin(CommonDS_v2_BinaryTree T, CommonDS_v2_Tree_ElementType *Min)
 {
 	while (T != NULL)
 		if (T->FirstChild != NULL)
@@ -264,7 +264,7 @@ void CommonDS_v2_BST_RemoveNode(CommonDS_v2_Tree_Child C, CommonDS_v2_BinaryTree
 	CommonDS_v2_Tree_PopYieldState();
 }
 
-void CommonDS_v2_BST_RemoveValue(CommonDS_v2_List_ElementType X, CommonDS_v2_BinaryTree *T)
+void CommonDS_v2_BST_RemoveValue(CommonDS_v2_Tree_ElementType X, CommonDS_v2_BinaryTree *T)
 {
 	// TODO: Optimize
 	CommonDS_v2_BST_RemoveNode(CommonDS_v2_BST_Find(X, *T), T);
@@ -334,7 +334,7 @@ void __CommonDS_v2_AVL_Rotation_RL(CommonDS_v2_BinaryTree T)
 	R1->FirstChild = R3;
 }
 
-CommonDS_v2_Tree_Child CommonDS_v2_AVL_Add(CommonDS_v2_List_ElementType X, CommonDS_v2_BinaryTree T)
+CommonDS_v2_Tree_Child CommonDS_v2_AVL_Add(CommonDS_v2_Tree_ElementType X, CommonDS_v2_BinaryTree T)
 {
 	if (T == NULL)
 		return NULL;
@@ -403,7 +403,7 @@ void CommonDS_v2_AVL_RemoveNode(CommonDS_v2_Tree_Child X, CommonDS_v2_BinaryTree
 		CommonDS_v2_AVL_BalanceNode(*T);
 }
 
-void CommonDS_v2_AVL_RemoveValue(CommonDS_v2_List_ElementType X, CommonDS_v2_BinaryTree *T)
+void CommonDS_v2_AVL_RemoveValue(CommonDS_v2_Tree_ElementType X, CommonDS_v2_BinaryTree *T)
 {
 	CommonDS_v2_AVL_RemoveNode(CommonDS_v2_BST_Find(X, *T), T);
 }

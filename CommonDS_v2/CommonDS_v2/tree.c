@@ -12,7 +12,7 @@ int __CommonDS_v2_Tree_Walker_Deleter(CommonDS_v2_Tree_Child CurNode, CommonDS_v
 	return 1;
 }
 
-CommonDS_v2_Tree CommonDS_v2_Tree_CreateTree(CommonDS_v2_List_ElementType IV)
+CommonDS_v2_Tree CommonDS_v2_Tree_CreateTree(CommonDS_v2_Tree_ElementType IV)
 {
 	CommonDS_v2_Tree T;
 	
@@ -111,7 +111,7 @@ CommonDS_v2_Tree_Child CommonDS_v2_Tree_PreOrderYield(CommonDS_v2_Tree T)
 			C = CommonDS_v2_Tree_FirstChild((CommonDS_v2_Tree)CommonDS_v2_Stack_Top(CommonDS_v2_Tree_CurrentYieldingTree));
 			if (C != NULL) /* If has child, then yield child */
 			{
-				CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)C, CommonDS_v2_Tree_CurrentYieldingTree);
+				CommonDS_v2_Stack_Push((CommonDS_v2_Tree_ElementType)C, CommonDS_v2_Tree_CurrentYieldingTree);
 				return C;
 			}
 			else /* If leaf node, then yield next sibling */
@@ -125,7 +125,7 @@ CommonDS_v2_Tree_Child CommonDS_v2_Tree_PreOrderYield(CommonDS_v2_Tree T)
 				
 				if (C != NULL) /* A valid sibling is found */
 				{
-					CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)C, CommonDS_v2_Tree_CurrentYieldingTree);
+					CommonDS_v2_Stack_Push((CommonDS_v2_Tree_ElementType)C, CommonDS_v2_Tree_CurrentYieldingTree);
 					return C;
 				}
 				else /* If no such sibling is found, then the tree is completely traversed */
@@ -144,7 +144,7 @@ CommonDS_v2_Tree_Child CommonDS_v2_Tree_PreOrderYield(CommonDS_v2_Tree T)
 		
 		// Initialize yield stack and return the root
 		CommonDS_v2_Tree_CurrentYieldingTree = CommonDS_v2_Stack_CreateStack();
-		CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)T, CommonDS_v2_Tree_CurrentYieldingTree);
+		CommonDS_v2_Stack_Push((CommonDS_v2_Tree_ElementType)T, CommonDS_v2_Tree_CurrentYieldingTree);
 		return T;
 	}
 }
@@ -174,11 +174,11 @@ CommonDS_v2_Tree_Child CommonDS_v2_Tree_PostOrderYield(CommonDS_v2_Tree T)
 		else /* More children to traverse */
 		{
 			// Search for the next leaf
-			CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)C, CommonDS_v2_Tree_CurrentYieldingTree);
+			CommonDS_v2_Stack_Push((CommonDS_v2_Tree_ElementType)C, CommonDS_v2_Tree_CurrentYieldingTree);
 			while (C->FirstChild != NULL)
 			{
 				C = C->FirstChild;
-				CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)C, CommonDS_v2_Tree_CurrentYieldingTree);
+				CommonDS_v2_Stack_Push((CommonDS_v2_Tree_ElementType)C, CommonDS_v2_Tree_CurrentYieldingTree);
 			}
 		}
 		return C;
@@ -191,12 +191,12 @@ CommonDS_v2_Tree_Child CommonDS_v2_Tree_PostOrderYield(CommonDS_v2_Tree T)
 		
 		// Initialize yield stack and return the first leaf
 		CommonDS_v2_Tree_CurrentYieldingTree = CommonDS_v2_Stack_CreateStack();
-		CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)T, CommonDS_v2_Tree_CurrentYieldingTree);
+		CommonDS_v2_Stack_Push((CommonDS_v2_Tree_ElementType)T, CommonDS_v2_Tree_CurrentYieldingTree);
 		C = T;
 		while (C->FirstChild != NULL)
 		{
 			C = C->FirstChild;
-			CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)C, CommonDS_v2_Tree_CurrentYieldingTree);
+			CommonDS_v2_Stack_Push((CommonDS_v2_Tree_ElementType)C, CommonDS_v2_Tree_CurrentYieldingTree);
 		}
 		return C;
 	}
@@ -219,7 +219,7 @@ void CommonDS_v2_Tree_PushYieldState()
 		CommonDS_v2_Tree_SavedYieldState = CommonDS_v2_Stack_CreateStack();
 	
 	CommonDS_v2_Stack Tmp = (CommonDS_v2_Stack)CommonDS_v2_List_CloneList(CommonDS_v2_Tree_CurrentYieldingTree);
-	CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)Tmp, CommonDS_v2_Tree_SavedYieldState);
+	CommonDS_v2_Stack_Push((CommonDS_v2_Tree_ElementType)Tmp, CommonDS_v2_Tree_SavedYieldState);
 }
 
 void CommonDS_v2_Tree_PopYieldState()
@@ -359,12 +359,12 @@ CommonDS_v2_Tree_Sibling CommonDS_v2_Tree_NextSibling(CommonDS_v2_Tree_Sibling S
 	return S->NextSibling;
 }
 
-CommonDS_v2_List_ElementType CommonDS_v2_Tree_Retrieve(CommonDS_v2_Tree_PNode N)
+CommonDS_v2_Tree_ElementType CommonDS_v2_Tree_Retrieve(CommonDS_v2_Tree_PNode N)
 {
 	return N->Element;
 }
 
-void CommonDS_v2_Tree_Delete(CommonDS_v2_List_ElementType X, CommonDS_v2_Tree T, CommonDS_v2_Tree_Child (*Yielder)(CommonDS_v2_Tree T), int DeleteSubTreeAsWell)
+void CommonDS_v2_Tree_Delete(CommonDS_v2_Tree_ElementType X, CommonDS_v2_Tree T, CommonDS_v2_Tree_Child (*Yielder)(CommonDS_v2_Tree T), int DeleteSubTreeAsWell)
 {
 	CommonDS_v2_Tree_Child C, P;
 	
@@ -394,7 +394,7 @@ void CommonDS_v2_Tree_Delete(CommonDS_v2_List_ElementType X, CommonDS_v2_Tree T,
 	CommonDS_v2_Tree_PopYieldState();
 }
 
-CommonDS_v2_Tree_Child CommonDS_v2_Tree_AddChild(CommonDS_v2_List_ElementType X, CommonDS_v2_Tree T)
+CommonDS_v2_Tree_Child CommonDS_v2_Tree_AddChild(CommonDS_v2_Tree_ElementType X, CommonDS_v2_Tree T)
 {
 	CommonDS_v2_Tree_Child C;
 	
@@ -404,7 +404,7 @@ CommonDS_v2_Tree_Child CommonDS_v2_Tree_AddChild(CommonDS_v2_List_ElementType X,
 	return C;
 }
 
-CommonDS_v2_Tree_Sibling CommonDS_v2_Tree_AddSibling(CommonDS_v2_List_ElementType X, CommonDS_v2_Tree T)
+CommonDS_v2_Tree_Sibling CommonDS_v2_Tree_AddSibling(CommonDS_v2_Tree_ElementType X, CommonDS_v2_Tree T)
 {
 	CommonDS_v2_Tree_Sibling S, P;
 	
@@ -460,7 +460,7 @@ void CommonDS_v2_Tree_MakeEmpty(CommonDS_v2_Tree T)
 
 void CommonDS_v2_Tree_Swap(CommonDS_v2_Tree_PNode A, CommonDS_v2_Tree_PNode B)
 {
-	CommonDS_v2_List_ElementType Tmp;
+	CommonDS_v2_Tree_ElementType Tmp;
 	
 	Tmp = A->Element;
 	A->Element = B->Element;

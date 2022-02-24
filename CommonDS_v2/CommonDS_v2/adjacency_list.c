@@ -70,6 +70,28 @@ void CommonDS_v2_Graph_DisconnectVertex(CommonDS_v2_List_ElementType From, Commo
 		CommonDS_v2_List_Delete(From, (CommonDS_v2_List)V2->Param);
 }
 
+CommonDS_v2_List_ElementType CommonDS_v2_Graph_VertexRetrieve(CommonDS_v2_Vertex V)
+{ return CommonDS_v2_List_Retrieve((CommonDS_v2_List)V); }
+
+CommonDS_v2_Edge CommonDS_v2_Graph_VertexIterateEdge(CommonDS_v2_Vertex V)
+{
+	if (V && V->Param)
+		return (CommonDS_v2_Edge)CommonDS_v2_List_First((CommonDS_v2_List)V->Param);
+	else return NULL;
+}
+
+CommonDS_v2_Edge CommonDS_v2_Graph_VertexNextEdge(CommonDS_v2_Vertex V, CommonDS_v2_Edge E)
+{ return CommonDS_v2_List_Advance((CommonDS_v2_List_Position)E); }
+
+CommonDS_v2_List_ElementType CommonDS_v2_Graph_EdgeRetrieve(CommonDS_v2_Edge E)
+{ return (CommonDS_v2_List_ElementType)E->Element; }
+
+CommonDS_v2_AdjacencyList_WeightType CommonDS_v2_Graph_GetWeight(CommonDS_v2_Edge E)
+{ return (CommonDS_v2_AdjacencyList_WeightType)E->Param; }
+
+void CommonDS_v2_Graph_SetWeight(CommonDS_v2_Edge E, CommonDS_v2_AdjacencyList_WeightType N)
+{ E->Param = (CommonDS_v2_AdjacencyList_ExtraDataType)N; }
+
 CommonDS_v2_Edge CommonDS_v2_Graph_FindEdge(CommonDS_v2_List_ElementType X1, CommonDS_v2_List_ElementType X2, CommonDS_v2_Graph G)
 {
 	CommonDS_v2_Vertex V = CommonDS_v2_Graph_FindVertex(X1, G);
@@ -107,14 +129,14 @@ CommonDS_v2_List CommonDS_v2_Graph_FindNeighborFrom(CommonDS_v2_List_ElementType
 	return L;
 }
 
-int CommonDS_v2_Graph_CountEdge(CommonDS_v2_Graph G)
+CommonDS_v2_SizeType CommonDS_v2_Graph_CountEdge(CommonDS_v2_Graph G)
 {
 	if (G == NULL)
 		return -1;
 	
 	CommonDS_v2_Vertex V;
 	CommonDS_v2_Edge E;
-	int C = 0;
+	CommonDS_v2_SizeType C = 0;
 	
 	for (V = CommonDS_v2_List_First(G); V != NULL; V = CommonDS_v2_List_Advance(V))
 		if (V->Param)

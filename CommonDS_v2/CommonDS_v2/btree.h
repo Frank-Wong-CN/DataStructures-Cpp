@@ -30,9 +30,9 @@ typedef CommonDS_v2_Tree_PNode CommonDS_v2_BTree;
 // ADT
 CommonDS_v2_BTree CommonDS_v2_BTree_CreateTree();
 CommonDS_v2_BTree CommonDS_v2_BTree_CreateTreeFromList(CommonDS_v2_List *L, CommonDS_v2_SizeType Len);
-void CommonDS_v2_BTree_Add(CommonDS_v2_List_ElementType X, CommonDS_v2_BTree T);
+void CommonDS_v2_BTree_Add(CommonDS_v2_Tree_ElementType X, CommonDS_v2_BTree T);
 void CommonDS_v2_BTree_RemoveNode(CommonDS_v2_Tree_Child C, CommonDS_v2_BTree T);
-void CommonDS_v2_BTree_RemoveValue(CommonDS_v2_List_ElementType X, CommonDS_v2_BTree T);
-CommonDS_v2_Tree_Child CommonDS_v2_BTree_Find(CommonDS_v2_List_ElementType X, CommonDS_v2_BTree T);
+void CommonDS_v2_BTree_RemoveValue(CommonDS_v2_Tree_ElementType X, CommonDS_v2_BTree T);
+CommonDS_v2_Tree_Child CommonDS_v2_BTree_Find(CommonDS_v2_Tree_ElementType X, CommonDS_v2_BTree T);
 
 #endif

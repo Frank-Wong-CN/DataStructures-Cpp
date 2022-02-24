@@ -16,20 +16,30 @@ CommonDS_v2_Vertex CommonDS_v2_Graph_DepthFirstYield(CommonDS_v2_List_ElementTyp
 			return NULL;
 		
 		V = (CommonDS_v2_Vertex)CommonDS_v2_Stack_Pop(CommonDS_v2_Graph_CurrentYieldingGraph);
-		if (V->Param)
-			for (E = CommonDS_v2_List_First((CommonDS_v2_List)V->Param); E != NULL; E = CommonDS_v2_List_Advance(E))
-				CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)CommonDS_v2_Graph_FindVertex(E->Element, G), CommonDS_v2_Graph_CurrentYieldingGraph);
+		if (!CommonDS_v2_List_Find((CommonDS_v2_List_ElementType)V, CommonDS_v2_Graph_CurrentYieldedNodeSet))
+		{
+			CommonDS_v2_Queue_Enqueue((CommonDS_v2_List_ElementType)V, CommonDS_v2_Graph_CurrentYieldedNodeSet);
+			E = CommonDS_v2_Graph_VertexIterateEdge(V);
+			if (E) for (; E != NULL; E = CommonDS_v2_Graph_VertexNextEdge(V, E))
+				CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)CommonDS_v2_Graph_FindVertex(CommonDS_v2_Graph_EdgeRetrieve(E), G), CommonDS_v2_Graph_CurrentYieldingGraph);
+		}
+		else V = NULL;
 		
 		CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)G, CommonDS_v2_Graph_CurrentYieldingGraph);
 		
-		return V;
+		if (V) return V;
+		else return CommonDS_v2_Graph_DepthFirstYield(X, NULL);
 	}
 	else
 	{
 		if (CommonDS_v2_Graph_CurrentYieldingGraph)
 			CommonDS_v2_Stack_Dispose(&CommonDS_v2_Graph_CurrentYieldingGraph);
 		
+		if (CommonDS_v2_Graph_CurrentYieldedNodeSet)
+			CommonDS_v2_List_DeleteList(&CommonDS_v2_Graph_CurrentYieldedNodeSet);
+
 		CommonDS_v2_Graph_CurrentYieldingGraph = CommonDS_v2_Stack_CreateStack();
+		CommonDS_v2_Graph_CurrentYieldedNodeSet = CommonDS_v2_List_CreateList();
 		CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)CommonDS_v2_Graph_FindVertex(X, G), CommonDS_v2_Graph_CurrentYieldingGraph);
 		CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)G, CommonDS_v2_Graph_CurrentYieldingGraph);
 		return CommonDS_v2_Graph_DepthFirstYield(X, NULL);
@@ -52,20 +62,30 @@ CommonDS_v2_Vertex CommonDS_v2_Graph_BreadthFirstYield(CommonDS_v2_List_ElementT
 			return NULL;
 		
 		V = (CommonDS_v2_Vertex)CommonDS_v2_Queue_Dequeue(CommonDS_v2_Graph_CurrentYieldingGraph);
-		if (V->Param)
-			for (E = CommonDS_v2_List_First((CommonDS_v2_List)V->Param); E != NULL; E = CommonDS_v2_List_Advance(E))
-				CommonDS_v2_Queue_Enqueue((CommonDS_v2_List_ElementType)CommonDS_v2_Graph_FindVertex(E->Element, G), CommonDS_v2_Graph_CurrentYieldingGraph);
-		
+		if (!CommonDS_v2_List_Find((CommonDS_v2_List_ElementType)V, CommonDS_v2_Graph_CurrentYieldedNodeSet))
+		{
+			CommonDS_v2_Queue_Enqueue((CommonDS_v2_List_ElementType)V, CommonDS_v2_Graph_CurrentYieldedNodeSet);
+			E = CommonDS_v2_Graph_VertexIterateEdge(V);
+			if (E) for (; E != NULL; E = CommonDS_v2_Graph_VertexNextEdge(V, E))
+				CommonDS_v2_Queue_Enqueue((CommonDS_v2_List_ElementType)CommonDS_v2_Graph_FindVertex(CommonDS_v2_Graph_EdgeRetrieve(E), G), CommonDS_v2_Graph_CurrentYieldingGraph);
+		}
+		else V = NULL;
+
 		CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)G, CommonDS_v2_Graph_CurrentYieldingGraph);
 		
-		return V;
+		if (V) return V;
+		else return CommonDS_v2_Graph_BreadthFirstYield(X, NULL);
 	}
 	else
 	{
 		if (CommonDS_v2_Graph_CurrentYieldingGraph)
 			CommonDS_v2_Queue_Dispose(&CommonDS_v2_Graph_CurrentYieldingGraph);
 		
+		if (CommonDS_v2_Graph_CurrentYieldedNodeSet)
+			CommonDS_v2_List_DeleteList(&CommonDS_v2_Graph_CurrentYieldedNodeSet);
+
 		CommonDS_v2_Graph_CurrentYieldingGraph = CommonDS_v2_Queue_CreateQueue();
+		CommonDS_v2_Graph_CurrentYieldedNodeSet = CommonDS_v2_List_CreateList();
 		CommonDS_v2_Queue_Enqueue((CommonDS_v2_List_ElementType)CommonDS_v2_Graph_FindVertex(X, G), CommonDS_v2_Graph_CurrentYieldingGraph);
 		CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)G, CommonDS_v2_Graph_CurrentYieldingGraph);
 		return CommonDS_v2_Graph_BreadthFirstYield(X, NULL);
@@ -82,12 +102,18 @@ void CommonDS_v2_Graph_PushYieldState()
 	
 	CommonDS_v2_List Tmp = (CommonDS_v2_List)CommonDS_v2_List_CloneList(CommonDS_v2_Graph_CurrentYieldingGraph);
 	CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)Tmp, CommonDS_v2_Graph_SavedYieldState);
+
+	Tmp = (CommonDS_v2_List)CommonDS_v2_List_CloneList(CommonDS_v2_Graph_CurrentYieldedNodeSet);
+	CommonDS_v2_Stack_Push((CommonDS_v2_List_ElementType)Tmp, CommonDS_v2_Graph_SavedYieldState);
 }
 
 void CommonDS_v2_Graph_PopYieldState()
 {
 	if (CommonDS_v2_Graph_SavedYieldState == NULL)
 		return;
+	
+	CommonDS_v2_List_DeleteList(&CommonDS_v2_Graph_CurrentYieldedNodeSet);
+	CommonDS_v2_Graph_CurrentYieldedNodeSet = (CommonDS_v2_Stack)CommonDS_v2_Stack_Pop(CommonDS_v2_Graph_SavedYieldState);
 	
 	CommonDS_v2_List_DeleteList(&CommonDS_v2_Graph_CurrentYieldingGraph);
 	CommonDS_v2_Graph_CurrentYieldingGraph = (CommonDS_v2_Stack)CommonDS_v2_Stack_Pop(CommonDS_v2_Graph_SavedYieldState);
@@ -107,10 +133,13 @@ CommonDS_v2_List CommonDS_v2_Graph_DepthFirstTraverse(CommonDS_v2_List_ElementTy
 	while (CommonDS_v2_List_Size(S) > 0)
 	{
 		V = CommonDS_v2_List_Find(CommonDS_v2_Stack_Pop(S), G);
+		if (CommonDS_v2_List_Find((CommonDS_v2_List_ElementType)V, L))
+			continue;
+
 		CommonDS_v2_List_Insert((CommonDS_v2_List_ElementType)V, L, CommonDS_v2_List_Last(L));
-		if (V->Param)
-			for (E = CommonDS_v2_List_First((CommonDS_v2_List)V->Param); E != NULL; E = CommonDS_v2_List_Advance(E))
-				CommonDS_v2_Stack_Push(E->Element, S);
+		E = CommonDS_v2_Graph_VertexIterateEdge(V);
+		if (E) for (; E != NULL; E = CommonDS_v2_Graph_VertexNextEdge(V, E))
+			CommonDS_v2_Stack_Push(CommonDS_v2_Graph_EdgeRetrieve(E), S);
 	}
 	
 	CommonDS_v2_Stack_Dispose(&S);
@@ -131,10 +160,13 @@ CommonDS_v2_List CommonDS_v2_Graph_BreadthFirstTraverse(CommonDS_v2_List_Element
 	while (CommonDS_v2_List_Size(S) > 0)
 	{
 		V = CommonDS_v2_List_Find(CommonDS_v2_Queue_Dequeue(S), G);
+		if (CommonDS_v2_List_Find((CommonDS_v2_List_ElementType)V, L))
+			continue;
+		
 		CommonDS_v2_List_Insert((CommonDS_v2_List_ElementType)V, L, CommonDS_v2_List_Last(L));
-		if (V->Param)
-			for (E = CommonDS_v2_List_First((CommonDS_v2_List)V->Param); E != NULL; E = CommonDS_v2_List_Advance(E))
-				CommonDS_v2_Queue_Enqueue(E->Element, S);
+		E = CommonDS_v2_Graph_VertexIterateEdge(V);
+		if (E) for (; E != NULL; E = CommonDS_v2_Graph_VertexNextEdge(V, E))
+			CommonDS_v2_Queue_Enqueue(CommonDS_v2_Graph_EdgeRetrieve(E), S);
 	}
 	
 	CommonDS_v2_Queue_Dispose(&S);
